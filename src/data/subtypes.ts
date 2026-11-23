@@ -24,6 +24,8 @@ export interface SubtypeOption {
   repeats?: boolean;
   /** Free text option. Shown back as "Custom: <text>" */
   custom?: boolean;
+  /** Only show special tests whose GTR methods match (for example optical mapping) */
+  specialMethods?: RegExp;
   /** Profile for this option. Missing fields come from the condition's normal profile. */
   profile: Pick<Profile, "needed" | "steps"> & Partial<Pick<Profile, "notes" | "sources" | "specialTests" | "genes">>;
 }
@@ -57,6 +59,7 @@ const FSHD_GR: Source = { url: "https://www.ncbi.nlm.nih.gov/books/NBK1443/", ch
 const FSHD_GUIDE: Source = { url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC11147721/", checked: CHECKED, label: "Best practice guidelines on genetic diagnostics of FSHD (2024)" };
 const FSHD_REVIEW: Source = { url: "https://www.nature.com/articles/s10038-025-01401-6", checked: CHECKED, label: "Review: diversity in FSHD genetics (J Hum Genet, 2025)" };
 export const FSHD_SOCIETY: Source = { url: "https://www.fshdsociety.org/living-with-fshd/understanding-fshd/genetic-testing/", checked: CHECKED, label: "FSHD Society: Genetic testing" };
+const FSHD_DPED: Source = { url: "https://doi.org/10.1093/hmg/ddab250", checked: CHECKED, label: "Lemmers et al. 2022: proximally extended D4Z4 deletions (Hum Mol Genet)" };
 const FSHD_SOURCES = [FSHD_GR, FSHD_GUIDE];
 
 const D4Z4_FIRST = {
@@ -108,11 +111,12 @@ export function parseFshdVariant(raw: string): SubtypeChoice | null {
   const ch = text.match(CHANGE_RE);
   const change = ch ? `${ch[1].toUpperCase()} ${ch[2].trim()}` : null;
   const s = text.toLowerCase();
-  const ids = ["unknown", "fshd1", "fshd2-smchd1", "fshd2-dnmt3b", "fshd2-lrif1", "fshd1-fshd2", "fshd1-mosaic", "custom"];
+  const ids = ["unknown", "fshd1", "fshd2-smchd1", "fshd2-dnmt3b", "fshd2-lrif1", "fshd1-fshd2", "fshd1-mosaic", "fshd1-4q-deletion", "custom"];
   if (ids.includes(s)) return { id: s };
   if (s === "fshd1-plus-fshd2") return { id: "fshd1-fshd2" };
   if (s === "mosaic-fshd1") return { id: "fshd1-mosaic" };
   if (/^unknown\b/.test(s)) return { id: "unknown" };
+  if (/\bdped\b|proximal(?:ly)?[\s-]*extended|\b4q(?:35)?\s*(?:deletion|del)\b|d4f104s1|p13e-?11\s*(?:deletion|del)/.test(s)) return { id: "fshd1-4q-deletion" };
   if (/mosaic/.test(s)) return { id: "fshd1-mosaic", ru };
   if (/fshd\s*1\s*(\+|and|&|plus)\s*(fshd\s*)?2\b/.test(s)) return { id: "fshd1-fshd2", ru, change };
   if (/\blrif1\b|\bfshd\s*3\b/.test(s)) return { id: "fshd2-lrif1", change, ru };
@@ -139,6 +143,7 @@ export const SUBTYPE_SETS: SubtypeSet[] = [
       if (o.custom) return `Custom: ${c.custom ?? ""}`.trim();
       if (o.id === "unknown") return "Unknown";
       const ru = c.ru != null ? `${c.ru} RU` : "";
+      if (o.id === "fshd1-4q-deletion") return "FSHD1 with a 4q deletion";
       const name = { fshd1: "FSHD1", "fshd1-fshd2": "FSHD1+FSHD2", "fshd1-mosaic": "Mosaic FSHD1" }[o.id] ?? "FSHD2";
       const bits = o.id.startsWith("fshd2-") ? [c.change ?? o.profile.genes?.[0] ?? ""] : o.id === "fshd1-fshd2" ? [[ru, c.change].filter(Boolean).join(" + ")] : [ru];
       const rest = bits.filter(Boolean).join("");
@@ -168,6 +173,17 @@ export const SUBTYPE_SETS: SubtypeSet[] = [
           steps: [
             { title: "A D4Z4 sizing test that can detect mosaicism, such as optical genome mapping or a pulsed-field Southern blot", why: "Mosaic changes are only in some cells, so a basic blot can miss them. Standard gene panels, exomes, genomes and consumer DNA kits cannot measure D4Z4 at all." },
             FSHD2_THEN,
+          ] } },
+      { id: "fshd1-4q-deletion", label: "FSHD1 with a 4q deletion", specialMethods: /optical|combing/i,
+        helper: "Some DNA next to the D4Z4 region on chromosome 4 (4q35) is missing, and part or all of D4Z4 can be missing too. This means the usual repeat count may not be readable. Your report may say proximal extended deletion, DPED, D4F104S1 deletion or p13E-11 deletion.",
+        profile: { needed: ["d4z4"], specialTests: "fshd-d4z4", genes: ["DUX4"], sources: [FSHD_GR, FSHD_GUIDE, FSHD_DPED],
+          notes: [
+            { text: "Standard gene panels, exomes, genomes and consumer DNA kits cannot detect a 4q deletion." },
+            { text: "Ask the lab whether its method can detect a 4q deletion (sometimes called DPED). Below we show only labs that list optical mapping or molecular combing." },
+          ],
+          steps: [
+            { title: "A D4Z4 test that can see deletions next to D4Z4, such as optical genome mapping or molecular combing", why: "These tests look at the whole region around D4Z4, not just its length, so they can show a missing piece." },
+            { title: "Or: an extended Southern blot with extra probes", why: "A basic Southern blot uses one probe (p13E-11) next to D4Z4. A 4q deletion can remove that spot, so the result can look normal. Ask for the extended test that also uses the D4Z4 and 4qA probes." },
           ] } },
       { id: "custom", label: "Other (I will type what my report says)", custom: true,
         helper: "Use this if your report does not match the types above. Type what it says, for example a 4q-10q rearrangement or a size in kb. Please do not type your name, date of birth, address or the lab's report number. Nothing is saved.",

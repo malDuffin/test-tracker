@@ -21,7 +21,7 @@ describe("FSHD subtypes", () => {
   });
 
   it("has the stable ids shared with RDP and VV, Unknown first", () => {
-    expect(set.options.map((o) => o.id)).toEqual(["unknown", "fshd1", "fshd2-smchd1", "fshd2-dnmt3b", "fshd2-lrif1", "fshd1-fshd2", "fshd1-mosaic", "custom"]);
+    expect(set.options.map((o) => o.id)).toEqual(["unknown", "fshd1", "fshd2-smchd1", "fshd2-dnmt3b", "fshd2-lrif1", "fshd1-fshd2", "fshd1-mosaic", "fshd1-4q-deletion", "custom"]);
     expect(subtypeOption(set, null)?.id).toBe("unknown");
     expect(subtypeOption(set, "nonsense")?.id).toBe("unknown");
     expect(set.options.find((o) => o.id === "fshd2-dnmt3b")!.label).toMatch(/FSHD4/);
@@ -66,6 +66,22 @@ describe("FSHD subtypes", () => {
     expect(p.steps[0].title).toMatch(/mosaicism/);
     expect(p.steps[0].title).toMatch(/optical genome mapping|Southern blot/);
     expect(p.specialTests).toBe("fshd-d4z4");
+  });
+
+  it("4q deletion: sizing that sees deletions, extended blot, no panels or kits", () => {
+    const o = subtypeOption(set, "fshd1-4q-deletion")!;
+    expect(o.label).toBe("FSHD1 with a 4q deletion");
+    expect(o.repeats).toBeFalsy();
+    const p = prof("fshd1-4q-deletion");
+    expect(p.needed).toEqual(["d4z4"]);
+    expect(p.steps[0].title).toMatch(/optical genome mapping/);
+    expect(p.steps[1].why).toMatch(/p13E-11/);
+    expect(JSON.stringify(p.notes)).toMatch(/panels, exomes, genomes and consumer DNA kits cannot detect a 4q deletion/);
+    expect(p.sources.map((s) => s.url)).toContain("https://www.ncbi.nlm.nih.gov/books/NBK1443/");
+    const g = (special as unknown as Record<string, { t: [string, number, string, string, string][] }>)["fshd-d4z4"];
+    const shown = g.t.filter((r) => o.specialMethods!.test(r[3]));
+    expect(shown.length).toBeGreaterThan(0);
+    expect(shown.every((r) => /optical|combing/i.test(r[3]))).toBe(true);
   });
 
   it("repeat unit notes by range", () => {
@@ -118,6 +134,10 @@ describe("FSHD ?variant formats", () => {
     expect(parseFshdVariant("FSHD3")).toMatchObject({ id: "fshd2-lrif1" });
     expect(parseFshdVariant("DNMT3B c.1579T>C")).toMatchObject({ id: "fshd2-dnmt3b", change: "DNMT3B c.1579T>C" });
     expect(parseFshdVariant("fshd1-mosaic")).toEqual({ id: "fshd1-mosaic" });
+    expect(parseFshdVariant("fshd1-4q-deletion")).toEqual({ id: "fshd1-4q-deletion" });
+    expect(parseFshdVariant("FSHD1 with a 4q deletion")).toEqual({ id: "fshd1-4q-deletion" });
+    expect(parseFshdVariant("DPED allele, 4qA")).toEqual({ id: "fshd1-4q-deletion" });
+    expect(parseFshdVariant("proximally extended D4Z4 deletion")).toEqual({ id: "fshd1-4q-deletion" });
     expect(parseFshdVariant("")).toBeNull();
   });
 
@@ -136,6 +156,7 @@ describe("FSHD ?variant formats", () => {
     expect(d({ id: "fshd2-smchd1", change: "SMCHD1 c.1876A>G" })).toBe("FSHD2: SMCHD1 c.1876A>G");
     expect(d({ id: "fshd1-fshd2", ru: 9, change: "SMCHD1 c.1A>G" })).toBe("FSHD1+FSHD2: 9 RU + SMCHD1 c.1A>G");
     expect(d({ id: "fshd1-mosaic", ru: 4 })).toBe("Mosaic FSHD1: 4 RU");
+    expect(d({ id: "fshd1-4q-deletion" })).toBe("FSHD1 with a 4q deletion");
   });
 
   it("?subtype, ?variant and ?d4z4_ru combine; nothing else needed", () => {
@@ -148,6 +169,8 @@ describe("FSHD ?variant formats", () => {
     expect(choiceFromParams(null, "fshd1", null)).toBeNull();
     expect(parseParams("?subtype=FSHD1").subtype).toBe("fshd1");
     expect(parseParams("?subtype=<x>").subtype).toBeNull();
+    expect(parseParams("?fshd_type=fshd1-4q-deletion").subtype).toBe("fshd1-4q-deletion");
+    expect(choiceFromParams(set, "fshd1-4q-deletion", null)).toEqual({ id: "fshd1-4q-deletion" });
     expect(parseParams("?d4z4_ru=5").d4z4Ru).toBe(5);
     expect(parseParams("?d4z4_ru=0").d4z4Ru).toBeNull();
     expect(parseParams("?d4z4_ru=abc").d4z4Ru).toBeNull();

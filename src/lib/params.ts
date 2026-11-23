@@ -5,7 +5,7 @@
  *
  *   ?name=<condition>  ?gene=<SYMBOL>  ?variant=<HGVS or plain words>  ?country=<ISO2>  ?lang=<code>
  *   ?nation=<eng|sct|wls|nir> (optional, UK only)   ?mode=undiagnosed
- *   ?subtype=<id> (for conditions with known types, for example fshd1 or fshd2-smchd1)
+ *   ?subtype=<id> or ?fshd_type=<id> (for conditions with known types, for example fshd1 or fshd2-smchd1)
  *   ?d4z4_ru=<number> (FSHD: D4Z4 repeat units, same name as Variant Visual)
  */
 export interface Params {
@@ -58,6 +58,6 @@ export function parseParams(search: string): Params {
     lang,
     undiagnosed: mode === "undiagnosed" || mode === "symptoms",
     d4z4Ru: ((v) => (v && /^\d{1,3}$/.test(v) && +v >= 1 && +v <= 150 ? +v : null))(clean(get("d4z4_ru", "ru"), 5)),
-    subtype: ((s) => (s && /^[a-z0-9][a-z0-9-]{0,39}$/.test(s) ? s : null))((clean(get("subtype", "type"), 40) ?? "").toLowerCase()),
+    subtype: ((s) => (s && /^[a-z0-9][a-z0-9-]{0,39}$/.test(s) ? s : null))((clean(get("subtype", "fshd_type", "type"), 40) ?? "").toLowerCase()),
   };
 }

@@ -40,7 +40,7 @@ src/lib/variant.ts         classifyVariant(): snv, indel, exon_cnv, large_cnv, r
 src/data/subtypes.ts       condition subtypes shown as toggles (FSHD now); reusable for other conditions
 src/lib/rules.ts           profileFor(): condition type, needed kinds, testing order, notes, sources
 src/lib/coverage.ts        judgeCoverage() verdict rules; abilitiesFromGtr() GTR method flags to abilities
-src/lib/params.ts          parseParams() for ?name ?gene ?variant ?country ?nation ?lang ?mode ?subtype ?d4z4_ru
+src/lib/params.ts          parseParams() for ?name ?gene ?variant ?country ?nation ?lang ?mode ?subtype (?fshd_type) ?d4z4_ru
 src/lib/catalogue.ts       condition search and resolve (data: public/data/catalogue.json)
 src/lib/gtr.ts             loads public/data/gtr/meta.json and per-letter shards on demand
 src/data/*.ts              hand-checked labs/offers, programmes, public routes, consumer kits, symptoms, countries
@@ -80,7 +80,9 @@ docs/research/             research notes, plan and the draft lab data this app 
 - To add a condition: add a SubtypeSet with a `matches` rule, options and sources. If it needs tests
   that gene lists cannot describe, add an entry to `SPECIAL` in `scripts/build_gtr_index.py` (a name
   rule plus an explicit method rule; never hand-add labs) and rebuild.
-- FSHD ids: unknown, fshd1, fshd2-smchd1, fshd2-dnmt3b, fshd2-lrif1, fshd1-fshd2, fshd1-mosaic, custom.
+- FSHD ids: unknown, fshd1, fshd2-smchd1, fshd2-dnmt3b, fshd2-lrif1, fshd1-fshd2, fshd1-mosaic,
+  fshd1-4q-deletion, custom. `specialMethods` on an option filters the special tests by GTR method
+  (the 4q deletion option shows only optical mapping or molecular combing labs).
 
 ## Data rules
 

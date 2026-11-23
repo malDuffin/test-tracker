@@ -326,7 +326,7 @@ export function Results({ condition, gene, variantText, choice, symptoms, countr
       {/* Special tests (for example D4Z4 sizing for FSHD1) */}
       {profile.specialTests && (
         <Section id="special" title={t("Special tests for this condition")} intro={special ? t(special.label) : undefined}>
-          {special && meta ? <SpecialTests group={special} meta={meta} country={country} /> : <p role="status">{t("Loading tests…")}</p>}
+          {special && meta ? <SpecialTests group={subOpt?.specialMethods ? { ...special, t: special.t.filter((r) => subOpt.specialMethods!.test(r[3])) } : special} meta={meta} country={country} /> : <p role="status">{t("Loading tests…")}</p>}
         </Section>
       )}
 

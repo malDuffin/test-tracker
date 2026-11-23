@@ -40,7 +40,7 @@ https://<host>/?name=Duchenne%20muscular%20dystrophy&gene=DMD&variant=deletion%2
 | `nation` | UK only: `eng`, `sct`, `wls`, `nir` |
 | `lang` | Language code, as in Rare Disease Planet |
 | `mode=undiagnosed` | Open the symptoms route |
-| `subtype` | Condition type, for example `fshd1`, `fshd2-smchd1`, `fshd1-fshd2`, `fshd1-mosaic`, `custom` |
+| `subtype` (or `fshd_type`) | Condition type, for example `fshd1`, `fshd2-smchd1`, `fshd1-fshd2`, `fshd1-mosaic`, `fshd1-4q-deletion`, `custom` |
 | `d4z4_ru` | FSHD: D4Z4 repeat units (1 to 150) |
 
 Nothing passed in is stored.

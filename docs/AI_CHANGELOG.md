@@ -14,7 +14,8 @@ picker, with D4Z4 sizing first. Research: /workspace/fshd-variant-options/RESEAR
   testing order, notes, sources, the genes shown and an optional special test group.
 - FSHD options and stable ids (shared with RDP and VV): `unknown`, `fshd1`, `fshd2-smchd1`,
   `fshd2-dnmt3b` (sometimes called FSHD4), `fshd2-lrif1` (sometimes called FSHD3), `fshd1-fshd2`,
-  `fshd1-mosaic`, `custom` (Other: free text shown back as "Custom: <text>", trimmed, never rewritten;
+  `fshd1-mosaic`, `fshd1-4q-deletion` (Mal, t2179: proximal 4q35 deletions that remove part or all
+  of D4Z4, so the repeat count may not be readable), `custom` (Other: free text shown back as "Custom: <text>", trimmed, never rewritten;
   a "this looks like" hint offers a switch, the person confirms).
 - FSHD1, combined and mosaic get an optional repeat units box plus an EcoRI kb helper
   ((kb minus 5) / 3.3, FSHD Society), shown as an estimate. Range notes: 1-3, 1-7, 8-10 borderline
@@ -23,9 +24,13 @@ picker, with D4Z4 sizing first. Research: /workspace/fshd-variant-options/RESEAR
   measure D4Z4), then FSHD2. FSHD2 genes: that gene's panels plus 4qA and D4Z4 methylation. Combined:
   D4Z4 sizing and SMCHD1 (a panel alone scores Partly). Mosaic: sizing that can detect mosaicism
   (optical genome mapping or pulsed-field Southern blot), with a note that older tests can miss it.
-- URL: `?subtype=<id>` (also accepts `fshd1-plus-fshd2` and `mosaic-fshd1`), `?d4z4_ru=<n>`, and
+  4q deletion: optical genome mapping or molecular combing (special tests filtered to labs listing
+  those methods), or an extended Southern blot that also uses the D4Z4 and 4qA probes, because a
+  4q deletion can remove the usual p13E-11 probe site. Sources: GeneReviews NBK1443, the 2024
+  guidelines (from the 268th ENMC workshop) and Lemmers et al. 2022 (Hum Mol Genet).
+- URL: `?subtype=<id>` or `?fshd_type=<id>` (also accepts `fshd1-plus-fshd2` and `mosaic-fshd1`), `?d4z4_ru=<n>`, and
   `?variant=` in the shared formats ("FSHD1: 5 RU, 4qA", "FSHD2: SMCHD1 c.1876A>G",
-  "FSHD1+FSHD2: 9 RU + SMCHD1 c...", "Mosaic FSHD1: 4 RU", "Custom: ...", "Unknown", FSHD3/FSHD4).
+  "FSHD1+FSHD2: 9 RU + SMCHD1 c...", "Mosaic FSHD1: 4 RU", "FSHD1 with a 4q deletion" or DPED wording, "Custom: ...", "Unknown", FSHD3/FSHD4).
   Unrecognised text becomes Custom with the original words. Nothing is stored.
 - New variant kind `d4z4`. Exomes, genomes, microarrays and kits are "no" for it. GTR flag F_D4Z4 is
   set only when an FSHD test lists optical mapping, Southern blot or molecular combing.
