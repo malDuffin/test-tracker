@@ -5,8 +5,8 @@
  *
  *   ?name=<condition>  ?gene=<SYMBOL>  ?variant=<HGVS or plain words>  ?country=<ISO2>  ?lang=<code>
  *   ?nation=<eng|sct|wls|nir> (optional, UK only)   ?mode=undiagnosed
- *   ?subtype=<id> or ?fshd_type=<id> (for conditions with known types, for example fshd1 or fshd2-smchd1)
- *   ?d4z4_ru=<number> (FSHD: D4Z4 repeat units, same name as Variant Visual)
+ *   ?fshd_type=<id> or ?subtype=<id> (for conditions with known types, for example fshd1 or fshd2-smchd1)
+ *   ?d4z4_ru=<number> ?d4z4_hap=<4qA|4qB|4A166> (FSHD, same names as Variant Visual and RDP)
  */
 export interface Params {
   name: string | null;
@@ -18,6 +18,7 @@ export interface Params {
   undiagnosed: boolean;
   subtype: string | null;
   d4z4Ru: number | null;
+  d4z4Hap: "4qA" | "4qB" | "4A166" | null;
 }
 
 // Strip control characters and cap length. React escapes all output, so ">" (needed in HGVS such as
@@ -57,7 +58,8 @@ export function parseParams(search: string): Params {
     nation: cc === "GB" ? nation : null,
     lang,
     undiagnosed: mode === "undiagnosed" || mode === "symptoms",
+    d4z4Hap: ((v) => (v === "4qa" ? "4qA" : v === "4qb" ? "4qB" : v === "4a166" ? "4A166" : null))((clean(get("d4z4_hap", "haplotype"), 10) ?? "").toLowerCase()),
     d4z4Ru: ((v) => (v && /^\d{1,3}$/.test(v) && +v >= 1 && +v <= 150 ? +v : null))(clean(get("d4z4_ru", "ru"), 5)),
-    subtype: ((s) => (s && /^[a-z0-9][a-z0-9-]{0,39}$/.test(s) ? s : null))((clean(get("subtype", "fshd_type", "type"), 40) ?? "").toLowerCase()),
+    subtype: ((s) => (s && /^[a-z0-9][a-z0-9-]{0,39}$/.test(s) ? s : null))((clean(get("fshd_type", "subtype", "type"), 40) ?? "").toLowerCase()),
   };
 }

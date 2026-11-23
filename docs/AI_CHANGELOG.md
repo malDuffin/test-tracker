@@ -41,7 +41,13 @@ picker, with D4Z4 sizing first. Research: /workspace/fshd-variant-options/RESEAR
   translated in `public/i18n/_meta.json` and in the app. Keys that failed checks fall back to English.
 - Tests, typecheck and build: see the commit message. GitHub: pushed to main. Deployed: not deployed.
   Lovable: no project, 0 credits.
-- Not done: haplotype (4qA/4qB) and methylation % fields (VV has them), passing d4z4_ru to VV links.
+- Later the same evening (Mal, final ids live in RDP/VV): `src/lib/fshdType.ts` copied from Variant
+  Visual main (b411bbd) so parsing and stored strings match all three apps ("FSHD1: 6 RU, 4qA",
+  "FSHD2 (SMCHD1): c.1876A>G", "FSHD1 + FSHD2: 9 RU, SMCHD1 ...", "FSHD1 with a 4q deletion: 3 RU").
+  Params: `fshd_type` (or `subtype`, or `variant`), `d4z4_ru`, `d4z4_hap`. Toggles and sliders, not
+  text boxes: repeat units are Unknown / slider / EcoRI kb slider (estimate), haplotype is Unknown /
+  4qA / 4qB / 4A166 toggles. Only Other keeps a text box. 4q deletion also gets the optional units.
+- Not done: methylation % (VV has it), passing d4z4_ru / d4z4_hap on to VV links.
 
 ## 2026-11-23: v1 first build (Grok Bot)
 

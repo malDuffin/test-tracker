@@ -37,7 +37,7 @@ export default function App() {
         const hit = c.resolve(params.name, params.gene);
         if (hit) {
           setCondition(hit);
-          setSubtype(choiceFromParams(subtypeSetFor(hit), params.subtype, params.variant, params.d4z4Ru) ?? { id: "unknown" });
+          setSubtype(choiceFromParams(subtypeSetFor(hit), params.subtype, params.variant, params.d4z4Ru, params.d4z4Hap) ?? { id: "unknown" });
         }
         else if (params.name) setUnmatchedName(params.name);
       }

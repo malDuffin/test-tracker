@@ -88,6 +88,50 @@ export function VariantInput({ value, onChange }: { value: string; onChange: (v:
   );
 }
 
+function Toggle({ pressed, onClick, children }: { pressed: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button type="button" aria-pressed={pressed} onClick={onClick}
+      className={`rounded-md border px-3 py-2 text-start text-[15px] font-medium ${pressed ? "border-primary bg-primary text-primary-foreground" : "border-border bg-white"}`}>
+      {children}
+    </button>
+  );
+}
+
+/** Repeat units: Unknown by default, then a slider for units or for an EcoRI size in kb (estimate). */
+function RepeatPicker({ value, onChange }: { value: SubtypeChoice; onChange: (c: SubtypeChoice) => void }) {
+  const id = useId();
+  const [mode, setMode] = useState<"unknown" | "ru" | "kb">(value.ru != null ? "ru" : "unknown");
+  const [kb, setKb] = useState(18);
+  const est = mode === "kb" ? unitsFromEcoRIkb(kb) : null;
+  const ru = value.ru ?? 4;
+  return (
+    <div className="mt-3">
+      <p className="font-medium" id={`${id}-l`}>{t("Number of D4Z4 repeat units, if your report gives it")}</p>
+      <div className="mt-1 flex flex-wrap gap-2" role="group" aria-labelledby={`${id}-l`}>
+        <Toggle pressed={mode === "unknown"} onClick={() => { setMode("unknown"); onChange({ ...value, ru: null }); }}>{t("Unknown")}</Toggle>
+        <Toggle pressed={mode === "ru"} onClick={() => { setMode("ru"); onChange({ ...value, ru }); }}>{t("Repeat units")}</Toggle>
+        <Toggle pressed={mode === "kb"} onClick={() => { setMode("kb"); onChange({ ...value, ru: unitsFromEcoRIkb(kb) }); }}>{t("A size in kb (older test)")}</Toggle>
+      </div>
+      {mode === "ru" && (
+        <div className="mt-2">
+          <label htmlFor={`${id}-ru`} className="block text-sm">{t("Repeat units: {{n}}", { n: ru })}</label>
+          <input id={`${id}-ru`} type="range" min={1} max={Math.max(40, ru)} step={1} value={ru} className="w-full accent-[hsl(var(--primary))]"
+            aria-valuetext={t("{{n}} repeat units", { n: ru })} onChange={(e) => onChange({ ...value, ru: Number(e.target.value) })} />
+        </div>
+      )}
+      {mode === "kb" && (
+        <div className="mt-2">
+          <label htmlFor={`${id}-kb`} className="block text-sm">{t("EcoRI size: {{kb}} kb", { kb })}</label>
+          <input id={`${id}-kb`} type="range" min={8} max={60} step={1} value={kb} className="w-full accent-[hsl(var(--primary))]"
+            aria-valuetext={`${kb} kb`} onChange={(e) => { const k = Number(e.target.value); setKb(k); onChange({ ...value, ru: unitsFromEcoRIkb(k) }); }} />
+          <p className="mt-1 text-sm" aria-live="polite">{est != null ? t("Estimate: about {{n}} repeat units", { n: est }) : t("Too small to estimate.")}</p>
+          <p className="text-sm text-muted-foreground">{t("Estimate = (kb minus 5) divided by 3.3. This is only an estimate and does not fit every lab method (not EcoRI/BlnI). If your report gives repeat units, use that number.")}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function SubtypePicker({ set, value, onChange }: { set: SubtypeSet; value: SubtypeChoice; onChange: (c: SubtypeChoice) => void }) {
   const id = useId();
   const [kb, setKb] = useState("");
@@ -99,10 +143,7 @@ export function SubtypePicker({ set, value, onChange }: { set: SubtypeSet; value
       <p id={`${id}-h`} className="text-sm text-muted-foreground">{t("Pick Unknown if you are not sure. The type changes which test you need.")}</p>
       <div className="mt-2 flex flex-wrap gap-2" role="group" aria-describedby={`${id}-h`}>
         {set.options.map((o) => (
-          <button key={o.id} type="button" aria-pressed={value.id === o.id} onClick={() => onChange({ ...value, id: o.id })}
-            className={`rounded-md border px-3 py-2 text-start text-[15px] font-medium ${value.id === o.id ? "border-primary bg-primary text-primary-foreground" : "border-border bg-white"}`}>
-            {t(o.label)}
-          </button>
+          <Toggle key={o.id} pressed={value.id === o.id} onClick={() => onChange({ ...value, id: o.id })}>{t(o.label)}</Toggle>
         ))}
       </div>
       {opt.helper && <p className="mt-2 rounded bg-accent px-3 py-2 text-sm">{t(opt.helper)}</p>}
@@ -115,23 +156,18 @@ export function SubtypePicker({ set, value, onChange }: { set: SubtypeSet; value
           {(() => {
             const guess = value.custom && set.parseVariant ? set.parseVariant(value.custom) : null;
             const g = guess && guess.id !== "custom" && guess.id !== "unknown" ? set.options.find((o) => o.id === guess.id) : null;
-            return g ? <p className="mt-1 text-sm">{t("This looks like: {{type}}.", { type: t(g.label) })}{" "}<button type="button" className="underline" onClick={() => onChange({ id: g.id, ru: guess!.ru ?? null, change: guess!.change ?? null })}>{t("Switch to this type")}</button></p> : null;
+            return g ? <p className="mt-1 text-sm">{t("This looks like: {{type}}.", { type: t(g.label) })}{" "}<button type="button" className="underline" onClick={() => onChange({ id: g.id, ru: guess!.ru ?? null, hap: guess!.hap ?? null, change: guess!.change ?? null })}>{t("Switch to this type")}</button></p> : null;
           })()}
         </div>
       )}
-      {opt.repeats && (
-        <div className="mt-2 grid gap-3 sm:grid-cols-2">
-          <div>
-            <label htmlFor={`${id}-ru`} className="block font-medium">{t("Number of D4Z4 repeat units (optional)")}</label>
-            <input id={`${id}-ru`} type="number" inputMode="numeric" min={1} max={150} className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2.5 text-base"
-              value={value.ru ?? ""} onChange={(e) => { const n = parseInt(e.target.value, 10); onChange({ ...value, ru: Number.isFinite(n) && n >= 1 && n <= 150 ? n : null }); }} />
-          </div>
-          <div>
-            <label htmlFor={`${id}-kb`} className="block font-medium">{t("Or: EcoRI size in kb from an older report")}</label>
-            <input id={`${id}-kb`} type="text" inputMode="decimal" autoComplete="off" className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2.5 text-base" value={kb} onChange={(e) => setKb(e.target.value)} aria-describedby={`${id}-kbh`} />
-            <p id={`${id}-kbh`} className="mt-1 text-sm" aria-live="polite">
-              {est != null ? <>{t("Estimate: about {{n}} repeat units", { n: est })}{" "}<button type="button" className="underline" onClick={() => onChange({ ...value, ru: Math.round(est) })}>{t("Use this estimate")}</button></> : t("Estimate = (kb minus 5) divided by 3.3. This is only an estimate and does not fit every lab method (not EcoRI/BlnI). If your report gives repeat units, use that number.")}
-            </p>
+      {opt.repeats && <RepeatPicker value={value} onChange={onChange} />}
+      {opt.haplotype && (
+        <div className="mt-3">
+          <p className="font-medium" id={`${id}-hap`}>{t("Version of chromosome 4 (haplotype), if your report says")}</p>
+          <div className="mt-1 flex flex-wrap gap-2" role="group" aria-labelledby={`${id}-hap`}>
+            {([[null, "Unknown"], ["4qA", "4qA"], ["4qB", "4qB"], ["4A166", "4A166"]] as const).map(([h, l]) => (
+              <Toggle key={l} pressed={(value.hap ?? null) === h} onClick={() => onChange({ ...value, hap: h })}>{t(l)}</Toggle>
+            ))}
           </div>
         </div>
       )}

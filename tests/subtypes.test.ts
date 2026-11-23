@@ -29,7 +29,7 @@ describe("FSHD subtypes", () => {
   });
 
   it("repeat box only for FSHD1, combined and mosaic", () => {
-    expect(set.options.filter((o) => o.repeats).map((o) => o.id)).toEqual(["fshd1", "fshd1-fshd2", "fshd1-mosaic"]);
+    expect(set.options.filter((o) => o.repeats).map((o) => o.id)).toEqual(["fshd1", "fshd1-fshd2", "fshd1-mosaic", "fshd1-4q-deletion"]);
   });
 
   it("Unknown and FSHD1 put D4Z4 sizing first and say panels cannot measure it", () => {
@@ -71,7 +71,6 @@ describe("FSHD subtypes", () => {
   it("4q deletion: sizing that sees deletions, extended blot, no panels or kits", () => {
     const o = subtypeOption(set, "fshd1-4q-deletion")!;
     expect(o.label).toBe("FSHD1 with a 4q deletion");
-    expect(o.repeats).toBeFalsy();
     const p = prof("fshd1-4q-deletion");
     expect(p.needed).toEqual(["d4z4"]);
     expect(p.steps[0].title).toMatch(/optical genome mapping/);
@@ -93,8 +92,8 @@ describe("FSHD subtypes", () => {
   });
 
   it("EcoRI kb helper: (kb - 5) / 3.3", () => {
-    expect(unitsFromEcoRIkb(18)).toBeCloseTo(3.9, 1);
-    expect(unitsFromEcoRIkb(40)).toBeCloseTo(10.6, 1);
+    expect(unitsFromEcoRIkb(18)).toBe(4);
+    expect(unitsFromEcoRIkb(40)).toBe(11);
     expect(unitsFromEcoRIkb(4)).toBeNull();
     expect(unitsFromEcoRIkb(NaN)).toBeNull();
   });
@@ -123,49 +122,55 @@ describe("FSHD subtypes", () => {
   });
 });
 
-describe("FSHD ?variant formats", () => {
-  it("reads the shared display formats", () => {
-    expect(parseFshdVariant("Unknown")).toEqual({ id: "unknown" });
-    expect(parseFshdVariant("FSHD1: 5 RU, 4qA")).toMatchObject({ id: "fshd1", ru: 5 });
-    expect(parseFshdVariant("FSHD2: SMCHD1 c.1876A>G")).toMatchObject({ id: "fshd2-smchd1", change: "SMCHD1 c.1876A>G" });
-    expect(parseFshdVariant("FSHD1+FSHD2: 9 RU + SMCHD1 c.4719+1G>T")).toMatchObject({ id: "fshd1-fshd2", ru: 9 });
+describe("FSHD ?variant formats (shared with RDP and VV)", () => {
+  it("reads the shared stored strings", () => {
+    expect(parseFshdVariant("Unknown")).toMatchObject({ id: "unknown" });
+    expect(parseFshdVariant("FSHD1: 6 RU, 4qA")).toMatchObject({ id: "fshd1", ru: 6, hap: "4qA" });
+    expect(parseFshdVariant("FSHD2 (SMCHD1): c.1876A>G")).toMatchObject({ id: "fshd2-smchd1", change: "c.1876A>G" });
+    expect(parseFshdVariant("FSHD1 + FSHD2: 9 RU, SMCHD1 c.1876A>G")).toMatchObject({ id: "fshd1-fshd2", ru: 9 });
     expect(parseFshdVariant("Mosaic FSHD1: 4 RU")).toMatchObject({ id: "fshd1-mosaic", ru: 4 });
+    expect(parseFshdVariant("FSHD1 with a 4q deletion: 3 RU")).toMatchObject({ id: "fshd1-4q-deletion", ru: 3 });
     expect(parseFshdVariant("FSHD4")).toMatchObject({ id: "fshd2-dnmt3b" });
     expect(parseFshdVariant("FSHD3")).toMatchObject({ id: "fshd2-lrif1" });
-    expect(parseFshdVariant("DNMT3B c.1579T>C")).toMatchObject({ id: "fshd2-dnmt3b", change: "DNMT3B c.1579T>C" });
-    expect(parseFshdVariant("fshd1-mosaic")).toEqual({ id: "fshd1-mosaic" });
-    expect(parseFshdVariant("fshd1-4q-deletion")).toEqual({ id: "fshd1-4q-deletion" });
-    expect(parseFshdVariant("FSHD1 with a 4q deletion")).toEqual({ id: "fshd1-4q-deletion" });
-    expect(parseFshdVariant("DPED allele, 4qA")).toEqual({ id: "fshd1-4q-deletion" });
-    expect(parseFshdVariant("proximally extended D4Z4 deletion")).toEqual({ id: "fshd1-4q-deletion" });
+    expect(parseFshdVariant("proximally extended deletion")).toMatchObject({ id: "fshd1-4q-deletion" });
     expect(parseFshdVariant("")).toBeNull();
   });
 
   it("keeps Custom text exactly as written (trimmed only)", () => {
-    expect(parseFshdVariant("Custom: EcoRI/BlnI fragment 24 kb")).toEqual({ id: "custom", custom: "EcoRI/BlnI fragment 24 kb" });
-    expect(parseFshdVariant("custom:   hybrid 4q-10q allele  ")).toEqual({ id: "custom", custom: "hybrid 4q-10q allele" });
-    expect(parseFshdVariant("cis-duplication")).toEqual({ id: "custom", custom: "cis-duplication" });
+    expect(parseFshdVariant("Custom: EcoRI/BlnI fragment 24 kb")).toMatchObject({ id: "custom", custom: "EcoRI/BlnI fragment 24 kb" });
+    expect(parseFshdVariant("custom:   hybrid 4q-10q allele  ")).toMatchObject({ id: "custom", custom: "hybrid 4q-10q allele" });
+    expect(parseFshdVariant("cis-duplication")).toMatchObject({ id: "custom", custom: "cis-duplication" });
     const c = { id: "custom", custom: "EcoRI/BlnI fragment 24 kb" };
     expect(set.display!(c, subtypeOption(set, "custom")!)).toBe("Custom: EcoRI/BlnI fragment 24 kb");
   });
 
-  it("display strings match the shared formats", () => {
-    const d = (c: { id: string; ru?: number | null; change?: string | null }) => set.display!(c, subtypeOption(set, c.id)!);
-    expect(d({ id: "fshd1", ru: 5 })).toBe("FSHD1: 5 RU");
+  it("display strings match the shared stored strings", () => {
+    const d = (c: { id: string; ru?: number | null; hap?: "4qA" | "4qB" | "4A166" | null; change?: string | null }) => set.display!(c, subtypeOption(set, c.id)!);
+    expect(d({ id: "fshd1", ru: 5, hap: "4qA" })).toBe("FSHD1: 5 RU, 4qA");
     expect(d({ id: "fshd1" })).toBe("FSHD1");
-    expect(d({ id: "fshd2-smchd1", change: "SMCHD1 c.1876A>G" })).toBe("FSHD2: SMCHD1 c.1876A>G");
-    expect(d({ id: "fshd1-fshd2", ru: 9, change: "SMCHD1 c.1A>G" })).toBe("FSHD1+FSHD2: 9 RU + SMCHD1 c.1A>G");
+    expect(d({ id: "fshd2-smchd1", change: "c.1876A>G" })).toBe("FSHD2 (SMCHD1): c.1876A>G");
     expect(d({ id: "fshd1-mosaic", ru: 4 })).toBe("Mosaic FSHD1: 4 RU");
     expect(d({ id: "fshd1-4q-deletion" })).toBe("FSHD1 with a 4q deletion");
+    expect(d({ id: "unknown" })).toBe("Unknown");
+  });
+
+  it("haplotype notes", () => {
+    const p = applySubtype(profileFor(FSHD), subtypeOption(set, "fshd1"), { id: "fshd1", ru: 5, hap: "4qB" }, set);
+    expect(JSON.stringify(p.notes)).toMatch(/non-permissive/);
+    expect(parseParams("?d4z4_hap=4qa").d4z4Hap).toBe("4qA");
+    expect(parseParams("?d4z4_hap=xyz").d4z4Hap).toBeNull();
+    expect(choiceFromParams(set, "fshd1", null, 6, "4qA")).toEqual({ id: "fshd1", ru: 6, hap: "4qA" });
   });
 
   it("?subtype, ?variant and ?d4z4_ru combine; nothing else needed", () => {
     expect(choiceFromParams(set, "fshd2-lrif1", null)).toEqual({ id: "fshd2-lrif1" });
-    expect(choiceFromParams(set, null, "D4Z4 contraction, 6 repeat units")).toMatchObject({ id: "fshd1", ru: 6 });
+    expect(choiceFromParams(set, null, "FSHD1: 6 RU")).toMatchObject({ id: "fshd1", ru: 6 });
+    expect(parseParams("?fshd_type=fshd1-mosaic").subtype).toBe("fshd1-mosaic");
     expect(choiceFromParams(set, "fshd1", null, 7)).toEqual({ id: "fshd1", ru: 7 });
     expect(choiceFromParams(set, "mosaic-fshd1", null)).toEqual({ id: "fshd1-mosaic" });
+    expect(choiceFromParams(set, "fshd1", "FSHD1: 6 RU, 4qA")).toMatchObject({ id: "fshd1", ru: 6, hap: "4qA" });
     expect(choiceFromParams(set, null, null)).toEqual({ id: "unknown" });
-    expect(subtypeFromParams(set, null, "SMCHD1 c.1234A>G")).toBe("fshd2-smchd1");
+    expect(subtypeFromParams(set, null, "FSHD2 (SMCHD1): c.1234A>G")).toBe("fshd2-smchd1");
     expect(choiceFromParams(null, "fshd1", null)).toBeNull();
     expect(parseParams("?subtype=FSHD1").subtype).toBe("fshd1");
     expect(parseParams("?subtype=<x>").subtype).toBeNull();

@@ -80,6 +80,9 @@ docs/research/             research notes, plan and the draft lab data this app 
 - To add a condition: add a SubtypeSet with a `matches` rule, options and sources. If it needs tests
   that gene lists cannot describe, add an entry to `SPECIAL` in `scripts/build_gtr_index.py` (a name
   rule plus an explicit method rule; never hand-add labs) and rebuild.
+- FSHD parsing and stored strings come from `src/lib/fshdType.ts`, a copy of Variant Visual's file
+  (kept in step with RDP `src/lib/fshd-type.ts`). Change all three apps together.
+- Mal's rule: toggles and sliders instead of text boxes wherever possible, Unknown by default.
 - FSHD ids: unknown, fshd1, fshd2-smchd1, fshd2-dnmt3b, fshd2-lrif1, fshd1-fshd2, fshd1-mosaic,
   fshd1-4q-deletion, custom. `specialMethods` on an option filters the special tests by GTR method
   (the 4q deletion option shows only optical mapping or molecular combing labs).
