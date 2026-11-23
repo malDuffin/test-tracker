@@ -1,0 +1,121 @@
+{
+ "note": "All non-English files are machine translated (NLLB-200 distilled 1.3B, offline) and not medically reviewed. Missing keys fall back to English.",
+ "updated": "2026-11-23",
+ "languages": {
+  "fr": {
+   "translated": 345,
+   "fallbackToEnglish": 5,
+   "newFails": 5
+  },
+  "de": {
+   "translated": 347,
+   "fallbackToEnglish": 3,
+   "newFails": 3
+  },
+  "es": {
+   "translated": 348,
+   "fallbackToEnglish": 2,
+   "newFails": 2
+  },
+  "fi": {
+   "translated": 347,
+   "fallbackToEnglish": 3,
+   "newFails": 3
+  },
+  "nl": {
+   "translated": 348,
+   "fallbackToEnglish": 2,
+   "newFails": 2
+  },
+  "pt-BR": {
+   "translated": 345,
+   "fallbackToEnglish": 5,
+   "newFails": 5
+  },
+  "sv": {
+   "translated": 348,
+   "fallbackToEnglish": 2,
+   "newFails": 2
+  },
+  "ru": {
+   "translated": 349,
+   "fallbackToEnglish": 1,
+   "newFails": 1
+  },
+  "zh-Hans": {
+   "translated": 325,
+   "fallbackToEnglish": 25,
+   "newFails": 25
+  },
+  "zh-Hant": {
+   "translated": 297,
+   "fallbackToEnglish": 53,
+   "newFails": 53
+  },
+  "ar": {
+   "translated": 347,
+   "fallbackToEnglish": 3,
+   "newFails": 3
+  },
+  "fa": {
+   "translated": 346,
+   "fallbackToEnglish": 4,
+   "newFails": 4
+  },
+  "he": {
+   "translated": 347,
+   "fallbackToEnglish": 3,
+   "newFails": 3
+  },
+  "hi": {
+   "translated": 347,
+   "fallbackToEnglish": 3,
+   "newFails": 3
+  },
+  "tr": {
+   "translated": 347,
+   "fallbackToEnglish": 3,
+   "newFails": 3
+  },
+  "ga": {
+   "translated": 350,
+   "fallbackToEnglish": 0,
+   "newFails": 0
+  },
+  "vi": {
+   "translated": 349,
+   "fallbackToEnglish": 1,
+   "newFails": 1
+  },
+  "ja": {
+   "translated": 343,
+   "fallbackToEnglish": 7,
+   "newFails": 7
+  },
+  "ko": {
+   "translated": 344,
+   "fallbackToEnglish": 6,
+   "newFails": 6
+  },
+  "sk": {
+   "translated": 349,
+   "fallbackToEnglish": 1,
+   "newFails": 1
+  },
+  "hr": {
+   "translated": 346,
+   "fallbackToEnglish": 4,
+   "newFails": 4
+  },
+  "sr": {
+   "translated": 349,
+   "fallbackToEnglish": 1,
+   "newFails": 1
+  },
+  "el": {
+   "translated": 348,
+   "fallbackToEnglish": 2,
+   "newFails": 2
+  }
+ }
+}
