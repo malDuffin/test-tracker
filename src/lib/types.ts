@@ -7,6 +7,7 @@ export type VariantKind =
   | "repeat" // repeat expansion
   | "mtdna" // change in the mitochondrial DNA
   | "methylation" // imprinting / methylation change
+  | "d4z4" // shortened D4Z4 repeat region on 4q35 (FSHD1)
   | "unknown";
 
 /** What a test can do for one kind of change. */

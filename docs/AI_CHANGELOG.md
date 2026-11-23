@@ -3,6 +3,41 @@
 Newest first. Times are Europe/London. Every AI adds an entry: what changed, tests, deploy state,
 unfinished work. Write GitHub state and deployed state separately.
 
+## 2026-11-23 (evening): FSHD type picker, full translations (Grok Bot)
+
+Mal's FSHD decisions (23 Nov 2026, finalised in t2175): the variant box for FSHD becomes a type
+picker, with D4Z4 sizing first. Research: /workspace/fshd-variant-options/RESEARCH.md (not in repo).
+
+- New reusable pattern `src/data/subtypes.ts`: a SubtypeSet (question, match rule, options, optional
+  `parseVariant`, `repeatNotes`, `display`). When a condition matches, the variant box is replaced by
+  toggle buttons, "Unknown" first and default. Each option sets the kinds of change needed, the
+  testing order, notes, sources, the genes shown and an optional special test group.
+- FSHD options and stable ids (shared with RDP and VV): `unknown`, `fshd1`, `fshd2-smchd1`,
+  `fshd2-dnmt3b` (sometimes called FSHD4), `fshd2-lrif1` (sometimes called FSHD3), `fshd1-fshd2`,
+  `fshd1-mosaic`, `custom` (Other: free text shown back as "Custom: <text>", trimmed, never rewritten;
+  a "this looks like" hint offers a switch, the person confirms).
+- FSHD1, combined and mosaic get an optional repeat units box plus an EcoRI kb helper
+  ((kb minus 5) / 3.3, FSHD Society), shown as an estimate. Range notes: 1-3, 1-7, 8-10 borderline
+  (suggest methylation and FSHD2 genes), 11+.
+- Suggested tests: Unknown/FSHD1/Other: D4Z4 sizing first (panels, exomes, genomes and kits cannot
+  measure D4Z4), then FSHD2. FSHD2 genes: that gene's panels plus 4qA and D4Z4 methylation. Combined:
+  D4Z4 sizing and SMCHD1 (a panel alone scores Partly). Mosaic: sizing that can detect mosaicism
+  (optical genome mapping or pulsed-field Southern blot), with a note that older tests can miss it.
+- URL: `?subtype=<id>` (also accepts `fshd1-plus-fshd2` and `mosaic-fshd1`), `?d4z4_ru=<n>`, and
+  `?variant=` in the shared formats ("FSHD1: 5 RU, 4qA", "FSHD2: SMCHD1 c.1876A>G",
+  "FSHD1+FSHD2: 9 RU + SMCHD1 c...", "Mosaic FSHD1: 4 RU", "Custom: ...", "Unknown", FSHD3/FSHD4).
+  Unrecognised text becomes Custom with the original words. Nothing is stored.
+- New variant kind `d4z4`. Exomes, genomes, microarrays and kits are "no" for it. GTR flag F_D4Z4 is
+  set only when an FSHD test lists optical mapping, Southern blot or molecular combing.
+- New `public/data/gtr/special.json` from GTR (file of 15 Nov 2026): 4 D4Z4 sizing tests, from
+  Biogipuzkoa (Spain), Bionano Laboratories (US), CHEO (Canada) and University of Iowa (US), shown in
+  "Special tests for this condition". Raw GTR dump deleted again.
+- Translations: all 23 non-English languages done offline (NLLB-200 distilled 1.3B), marked machine
+  translated in `public/i18n/_meta.json` and in the app. Keys that failed checks fall back to English.
+- Tests, typecheck and build: see the commit message. GitHub: pushed to main. Deployed: not deployed.
+  Lovable: no project, 0 credits.
+- Not done: haplotype (4qA/4qB) and methylation % fields (VV has them), passing d4z4_ru to VV links.
+
 ## 2026-11-23: v1 first build (Grok Bot)
 
 Mal approved building v1 on 23 Nov 2026: worldwide from the start, charity guide prices with a source

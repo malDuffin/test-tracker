@@ -43,7 +43,7 @@ export function judgeCoverage(abilities: Abilities, geneIncluded: boolean | null
 }
 
 // GTR method flags (must match scripts/build_gtr_index.py)
-export const F_SEQ = 1, F_SEQ_PART = 2, F_DELDUP = 4, F_REPEAT = 8, F_METH = 16, F_TARGETED = 32, F_CYTO = 64, F_RNA = 128, F_UPD = 256;
+export const F_SEQ = 1, F_SEQ_PART = 2, F_DELDUP = 4, F_REPEAT = 8, F_METH = 16, F_TARGETED = 32, F_CYTO = 64, F_RNA = 128, F_UPD = 256, F_D4Z4 = 512;
 
 /**
  * Turn a GTR test's listed methods into abilities for one gene.
@@ -61,6 +61,9 @@ export function abilitiesFromGtr(flags: number, geneCount: number, gene: string)
   else a.repeat = focused ? "no" : "unknown";
   if (flags & (F_METH | F_UPD)) a.methylation = focused ? "yes" : "unknown";
   else a.methylation = focused ? "no" : "unknown";
+  // D4Z4 sizing needs optical genome mapping, Southern blot or molecular combing (flag set only
+  // when GTR lists one of those methods on an FSHD test). Anything else cannot measure it.
+  a.d4z4 = flags & F_D4Z4 ? "yes" : "no";
   if (/^MT-/i.test(gene)) a.mtdna = flags & (F_SEQ | F_SEQ_PART | F_TARGETED) ? (flags & F_SEQ ? "yes" : "partial") : "unknown";
   return a;
 }

@@ -24,6 +24,9 @@ export function classifyVariant(raw: string | null | undefined): VariantInfo {
   // Mitochondrial DNA: m.3243A>G, MT-ND1, "mtDNA deletion"
   if (/(^|[\s:(])m\.\d/.test(s) || /\bmt-[a-z0-9]+/.test(s) || /\bmtdna\b|mitochondrial dna/.test(s)) return out("mtdna");
 
+  // FSHD1: shortened D4Z4 region on 4q35 (checked before repeats and chromosome bands)
+  if (/d4z4|4q35|\bfshd1\b|contraction/.test(s)) return out("d4z4");
+
   // Repeat expansions: "(CGG)n", "CAG repeat", "expansion", "repeats", "GAA x 600"
   if (/repeat|expan|\((?:[acgt]{2,6})\)\s*(?:n|\d)|\b(cgg|cag|ctg|gaa|ccg|cctg|ggggcc|gcn|gcg)\b\s*(x|×|\d|n\b)/.test(s) || /\[\d{2,}\]/.test(s)) {
     return out("repeat");

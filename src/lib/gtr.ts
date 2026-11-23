@@ -41,4 +41,13 @@ export async function loadGtrGene(gene: string): Promise<GtrGene | null> {
   return (await p)[G] ?? null;
 }
 
+/** [accession, lab index, test name, methods, last updated] */
+export type GtrSpecialTest = [string, number, string, string, string];
+export interface GtrSpecial { label: string; badge: string; t: GtrSpecialTest[] }
+let specialCache: Promise<Record<string, GtrSpecial>> | null = null;
+export function loadGtrSpecial(): Promise<Record<string, GtrSpecial>> {
+  specialCache ??= fetch(`${import.meta.env.BASE_URL}data/gtr/special.json`).then((r) => (r.ok ? r.json() : {})).catch(() => ({}));
+  return specialCache;
+}
+
 export const gtrTestUrl = (accession: string) => `https://www.ncbi.nlm.nih.gov/gtr/tests/${encodeURIComponent(accession)}/`;

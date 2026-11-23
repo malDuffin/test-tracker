@@ -32,6 +32,22 @@ for (const rel of DATA) {
     keys.add(s);
   }
 }
+// Subtype toggles (src/data/subtypes.ts): questions, option labels, steps and notes
+{
+  const src = fs.readFileSync(path.join(ROOT, "src/data/subtypes.ts"), "utf8");
+  for (const m of src.matchAll(lit)) {
+    const s = unescape(m[1]);
+    const before = src.slice(Math.max(0, m.index - 40), m.index);
+    if (!/[a-z]/i.test(s) || !/\s/.test(s) || /^https?:/.test(s) || s.startsWith("@/")) continue;
+    if (/\b(url|id|checked)\s*:\s*$/.test(before) || /label: "(GeneReviews|Best practice)/.test(src.slice(m.index - 8, m.index + 20))) continue;
+    keys.add(s);
+  }
+}
+// Special GTR test groups: label and badge
+for (const g of Object.values(JSON.parse(fs.readFileSync(path.join(ROOT, "public/data/gtr/special.json"), "utf8")))) {
+  keys.add(g.label);
+  keys.add(g.badge);
+}
 // consumer kitLine texts and parts
 const consumer = fs.readFileSync(path.join(ROOT, "src/data/consumer.ts"), "utf8");
 for (const m of consumer.matchAll(/text: "((?:[^"\\]|\\.)*)"/g)) keys.add(unescape(m[1]));
@@ -44,6 +60,7 @@ keys.add("Free sponsored programmes are paid for by drug companies. They usually
 const sym = fs.readFileSync(path.join(ROOT, "src/data/symptoms.ts"), "utf8");
 for (const m of sym.matchAll(/label: "((?:[^"\\]|\\.)*)"/g)) keys.add(unescape(m[1]));
 
+keys.delete("English text {{name}}"); // example in a code comment
 const sorted = [...keys].filter((k) => k.trim()).sort();
 const out = Object.fromEntries(sorted.map((k) => [k, k]));
 fs.writeFileSync(path.join(ROOT, "public/i18n/en.json"), JSON.stringify(out, null, 1) + "\n");

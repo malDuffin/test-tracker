@@ -4,7 +4,8 @@ import type { Condition } from "@/lib/catalogue";
 import { profileFor, KIND_LABEL, type Profile } from "@/lib/rules";
 import { classifyVariant } from "@/lib/variant";
 import { abilitiesFromGtr, judgeCoverage, type CoverageResult, F_DELDUP, F_SEQ, F_REPEAT, F_METH, F_CYTO, F_TARGETED, F_SEQ_PART } from "@/lib/coverage";
-import { loadGtrGene, gtrTestUrl, type GtrGene, type GtrMeta } from "@/lib/gtr";
+import { loadGtrGene, loadGtrSpecial, gtrTestUrl, type GtrGene, type GtrMeta, type GtrSpecial } from "@/lib/gtr";
+import { applySubtype, subtypeOption, subtypeSetFor, type SubtypeChoice } from "@/data/subtypes";
 import type { VariantKind, Verdict } from "@/lib/types";
 import { OFFERS, labById, servesCountry, type Lab, type Offer } from "@/data/labs";
 import { matchProgrammes, SPONSOR_DATA_NOTE, SPONSOR_DATA_SOURCE } from "@/data/programmes";
@@ -143,14 +144,54 @@ function GeneTests({ gene, data, meta, profile, known, country, needed }: { gene
   );
 }
 
-export function Results({ condition, gene, variantText, symptoms, country, nation, doctor, meta, undiagnosed }: {
-  condition: Condition | null; gene: string | null; variantText: string; symptoms: string[]; country: string | null; nation: string | null; doctor: Doctor | null; meta: GtrMeta | null; undiagnosed: boolean;
+function SpecialTests({ group, meta, country }: { group: GtrSpecial; meta: GtrMeta; country: string | null }) {
+  return (
+    <>
+      <p className="text-sm">{t("These labs list this special test in the NIH Genetic Testing Registry. The registry has no prices, and labs update it at different times.")}</p>
+      {group.t.map(([acc, li, name, methods, touched]) => {
+        const [labName, labCountry] = meta.labs[li];
+        return (
+          <Card key={acc}>
+            <div className="flex flex-wrap items-start justify-between gap-2">
+              <div>
+                <h3 className="text-lg font-semibold">{labName}</h3>
+                <p className="text-[15px]">{name}</p>
+                <p className="text-sm text-muted-foreground">{labCountry} · {methods}</p>
+              </div>
+              <span className="inline-flex items-center gap-1 rounded-full bg-yes px-3 py-1 text-sm font-semibold text-white">✓ {t(group.badge)}</span>
+            </div>
+            {country && <p className="mt-2 text-sm">{t("Ask whether they accept samples from {{country}}.", { country: countryName(country) })}</p>}
+            <p className="mt-2 text-sm">{t("Price on request. A doctor usually needs to order it. Ask the lab.")}</p>
+            <p className="mt-2 text-xs text-muted-foreground">
+              {t("Registry entry last updated by the lab: {{date}}", { date: formatDate(touched) })} ·{" "}
+              <a className="underline" href={gtrTestUrl(acc)} target="_blank" rel="noopener noreferrer">{t("Open in the Genetic Testing Registry")}<span className="sr-only"> ({labName})</span></a>
+            </p>
+          </Card>
+        );
+      })}
+    </>
+  );
+}
+
+export function Results({ condition, gene, variantText, choice, symptoms, country, nation, doctor, meta, undiagnosed }: {
+  condition: Condition | null; gene: string | null; variantText: string; choice?: SubtypeChoice | null; symptoms: string[]; country: string | null; nation: string | null; doctor: Doctor | null; meta: GtrMeta | null; undiagnosed: boolean;
 }) {
-  const profile = useMemo(() => profileFor(undiagnosed ? null : condition), [condition, undiagnosed]);
+  const subSet = useMemo(() => (undiagnosed ? null : subtypeSetFor(condition)), [condition, undiagnosed]);
+  const subOpt = useMemo(() => subtypeOption(subSet, choice?.id ?? null), [subSet, choice?.id]);
+  const profile = useMemo(() => applySubtype(profileFor(undiagnosed ? null : condition), subOpt, choice, subSet), [condition, undiagnosed, subOpt, choice, subSet]);
+  const choiceText = subSet && subOpt && choice && subSet.display ? subSet.display(choice, subOpt) : null;
+  const [special, setSpecial] = useState<GtrSpecial | null>(null);
+  useEffect(() => {
+    setSpecial(null);
+    if (!profile.specialTests) return;
+    let cancelled = false;
+    loadGtrSpecial().then((all) => { if (!cancelled) setSpecial(all[profile.specialTests!] ?? null); });
+    return () => { cancelled = true; };
+  }, [profile.specialTests]);
   const variant = useMemo(() => classifyVariant(undiagnosed ? "" : variantText), [variantText, undiagnosed]);
   const known = variant.kind !== "unknown" ? variant.kind : null;
   const needed: VariantKind[] = useMemo(() => (known ? [known] : profile.needed), [known, profile]);
-  const genes = undiagnosed ? [] : condition?.genes ?? (gene ? [gene] : []);
+  const genes = undiagnosed ? [] : profile.genes ?? condition?.genes ?? (gene ? [gene] : []);
   const mainGene = gene && genes.includes(gene) ? gene : genes[0] ?? null;
   const [gtr, setGtr] = useState<GtrGene | null>(null);
   const [gtrGene, setGtrGene] = useState<string | null>(null);
@@ -216,6 +257,7 @@ export function Results({ condition, gene, variantText, symptoms, country, natio
                 {variant.hints.includes("deep_intronic") && <> {t("It looks like a change deep inside the gene. Exomes and many panels miss these. Genomes or RNA tests do better.")}</>}
               </p>
             )}
+            {choiceText && choice?.id !== "unknown" && <p className="mt-2 rounded bg-accent px-3 py-2"><span className="font-medium">{t("You picked:")}</span> <span dir="auto">{choiceText}</span></p>}
             {profile.notes.map((n, i) => <p key={i} className="mt-2 text-sm">{t(n.text, n.vars)}</p>)}
           </>
         )}
@@ -278,6 +320,13 @@ export function Results({ condition, gene, variantText, symptoms, country, natio
               <p className="mt-3 text-xs text-muted-foreground">{t("Sources:")} {profile.sources.map((s, i) => <span key={s.url}>{i > 0 && " · "}<SourceLink source={s} /></span>)}</p>
             )}
           </Card>
+        </Section>
+      )}
+
+      {/* Special tests (for example D4Z4 sizing for FSHD1) */}
+      {profile.specialTests && (
+        <Section id="special" title={t("Special tests for this condition")} intro={special ? t(special.label) : undefined}>
+          {special && meta ? <SpecialTests group={special} meta={meta} country={country} /> : <p role="status">{t("Loading tests…")}</p>}
         </Section>
       )}
 

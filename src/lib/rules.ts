@@ -38,6 +38,10 @@ export interface Profile {
   /** Extra plain notes, for example look-alike gene copies */
   notes: Note[];
   sources: Source[];
+  /** A special test group in public/data/gtr/special.json (for example FSHD1 D4Z4 sizing) */
+  specialTests?: string;
+  /** Genes to show tests for, when different from the condition's genes */
+  genes?: string[];
 }
 
 export interface ConditionLike {
@@ -129,9 +133,10 @@ export function profileFor(c: ConditionLike | null): Profile {
     ] };
   }
   if (FSHD_NAMES.test(c.label) || genes.includes("DUX4")) {
-    return { category: "fshd", needed: ["large_cnv", "methylation"], notes, sources: [geneReviews("FSHD")], steps: [
-      { title: "A special FSHD test (D4Z4 sizing)", why: "FSHD type 1 is caused by a shortened DNA region on chromosome 4. Standard panels, exomes and genomes do not measure it. Ask for a dedicated FSHD test." },
-      { title: "If that is normal: testing for FSHD type 2 (SMCHD1 and methylation)", why: "FSHD type 2 needs a different test." },
+    // Same as the "Unknown" option in src/data/subtypes.ts (FSHD type toggles).
+    return { category: "fshd", needed: ["d4z4"], notes, specialTests: "fshd-d4z4", genes: ["SMCHD1", "DNMT3B", "LRIF1", "DUX4"], sources: [{ url: "https://www.ncbi.nlm.nih.gov/books/NBK1443/", checked: CHECKED, label: "GeneReviews: Facioscapulohumeral Muscular Dystrophy" }], steps: [
+      { title: "First: a D4Z4 sizing test (optical genome mapping, Southern blot or molecular combing)", why: "FSHD1 is caused by a shortened D4Z4 region on chromosome 4 (4q35). Only these special tests can measure it. Standard gene panels, exomes, genomes and consumer DNA kits cannot measure D4Z4." },
+      { title: "If the D4Z4 size is normal: testing for FSHD2", why: "FSHD2 is usually caused by a change in SMCHD1, and more rarely DNMT3B or LRIF1. It also needs a permissive 4qA version of chromosome 4 and low D4Z4 methylation, so ask the lab about 4qA and D4Z4 methylation testing too." },
     ] };
   }
   const repeatGene = genes.find((g) => REPEAT_GENES.has(g)) ?? REPEAT_BY_NAME.find((r) => genes.includes(r.gene) && r.name.test(c.label))?.gene;
@@ -181,5 +186,6 @@ export const KIND_LABEL: Record<VariantKind, string> = {
   repeat: "a repeat that is too long",
   mtdna: "a change in the mitochondrial DNA",
   methylation: "a methylation (imprinting) change",
+  d4z4: "a shortened D4Z4 region on chromosome 4 (FSHD1)",
   unknown: "a change we could not work out",
 };

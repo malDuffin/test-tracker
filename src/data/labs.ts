@@ -174,8 +174,9 @@ const EXOME_LIMITS = "Exomes are not made to measure repeat expansions or methyl
 const REVVITY_LIMITS = "The lab says it does not test long repeats, methylation or balanced rearrangements, and is not designed for mosaicism.";
 const gc = at("https://www.genomeclinic.co.uk/professional-fees-and-tariff/");
 const nw = at("https://northwayclinic.co.uk/services/comprehensive-genomic-testing-exome-genome/");
-const exomeBase: Abilities = { snv: "yes", indel: "yes", repeat: "no", methylation: "no" };
-const genomeBase: Abilities = { snv: "yes", indel: "yes", exon_cnv: "unknown", large_cnv: "unknown", repeat: "unknown", methylation: "no", mtdna: "unknown" };
+// D4Z4 (FSHD1) cannot be measured by panels, exomes, genomes or microarrays.
+const exomeBase: Abilities = { snv: "yes", indel: "yes", repeat: "no", methylation: "no", d4z4: "no" };
+const genomeBase: Abilities = { snv: "yes", indel: "yes", exon_cnv: "unknown", large_cnv: "unknown", repeat: "unknown", methylation: "no", mtdna: "unknown", d4z4: "no" };
 
 /** Broad tests (exome, genome, microarray) and ordering visits. */
 export const OFFERS: Offer[] = [
@@ -227,7 +228,7 @@ export const OFFERS: Offer[] = [
   },
   {
     id: "baylor-cma", labId: "baylor", name: "Chromosome microarray (CMA)", type: "cma",
-    prices: [udnf("One person", "1,200")], abilities: { large_cnv: "yes", exon_cnv: "partial", snv: "no", indel: "no", repeat: "no", methylation: "no" },
+    prices: [udnf("One person", "1,200")], abilities: { large_cnv: "yes", exon_cnv: "partial", snv: "no", indel: "no", repeat: "no", methylation: "no", d4z4: "no" },
     abilityNotes: ["A microarray finds big missing or extra pieces of chromosomes. It does not read single letters."], url: "https://www.baylorgenetics.com/",
   },
   {
@@ -240,7 +241,7 @@ export const OFFERS: Offer[] = [
   },
   {
     id: "variantyx-cma", labId: "variantyx", name: "Chromosome microarray (CMA)", type: "cma",
-    prices: [udnf("One person", "850")], abilities: { large_cnv: "yes", exon_cnv: "partial", snv: "no", indel: "no", repeat: "no", methylation: "no" },
+    prices: [udnf("One person", "850")], abilities: { large_cnv: "yes", exon_cnv: "partial", snv: "no", indel: "no", repeat: "no", methylation: "no", d4z4: "no" },
     abilityNotes: ["A microarray finds big missing or extra pieces of chromosomes. It does not read single letters."], url: "https://www.variantyx.com/",
   },
   {
@@ -251,7 +252,7 @@ export const OFFERS: Offer[] = [
   {
     id: "centogene-exome", labId: "centogene", name: "CentoXome (exome) or CentoGenome (genome)", type: "exome",
     prices: [{ what: "Price on request", badge: "request", source: at("https://www.centogene.com/diagnostics/how-to-order-ship/billing-options/") }],
-    abilities: { snv: "yes", indel: "yes" }, url: "https://www.centogene.com/diagnostics/how-to-order-ship/billing-options/",
+    abilities: { snv: "yes", indel: "yes", d4z4: "no" }, url: "https://www.centogene.com/diagnostics/how-to-order-ship/billing-options/",
   },
   {
     id: "cegat-exome", labId: "cegat", name: "ExomeXtra (exome with extra CNV coverage)", type: "exome",
@@ -300,12 +301,12 @@ export const OFFERS: Offer[] = [
       { what: "Targeted panel", amount: "1,500", currency: "GBP", badge: "clinic", source: gc },
       { what: "Comprehensive panel", amount: "2,000", currency: "GBP", badge: "clinic", source: gc },
     ],
-    abilities: {}, abilityNotes: ["Which lab and which genes depends on your condition. Ask the clinic which kinds of change the test finds."], url: gc.url,
+    abilities: { d4z4: "no" }, abilityNotes: ["Which lab and which genes depends on your condition. Ask the clinic which kinds of change the test finds."], url: gc.url,
   },
   {
     id: "genomeclinic-cma", labId: "genome-clinic", name: "Microarray (aCGH)", type: "cma",
     prices: [{ what: "One person", amount: "750", currency: "GBP", badge: "clinic", source: gc }],
-    abilities: { large_cnv: "yes", exon_cnv: "partial", snv: "no", indel: "no", repeat: "no", methylation: "no" },
+    abilities: { large_cnv: "yes", exon_cnv: "partial", snv: "no", indel: "no", repeat: "no", methylation: "no", d4z4: "no" },
     abilityNotes: ["A microarray finds big missing or extra pieces of chromosomes. It does not read single letters."], url: gc.url,
   },
   {

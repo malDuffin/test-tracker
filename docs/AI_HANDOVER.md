@@ -36,10 +36,11 @@ src/App.tsx                page, form state, URL params, footer
 src/components/Form.tsx    condition combobox, variant box, symptoms, country (+ UK nation), doctor
 src/components/Results.tsx all result sections
 src/components/ui.tsx      Section, Card, VerdictBadge, PriceList, Checked, SourceLink
-src/lib/variant.ts         classifyVariant(): snv, indel, exon_cnv, large_cnv, repeat, mtdna, methylation, unknown
+src/lib/variant.ts         classifyVariant(): snv, indel, exon_cnv, large_cnv, repeat, mtdna, methylation, d4z4, unknown
+src/data/subtypes.ts       condition subtypes shown as toggles (FSHD now); reusable for other conditions
 src/lib/rules.ts           profileFor(): condition type, needed kinds, testing order, notes, sources
 src/lib/coverage.ts        judgeCoverage() verdict rules; abilitiesFromGtr() GTR method flags to abilities
-src/lib/params.ts          parseParams() for ?name ?gene ?variant ?country ?nation ?lang ?mode
+src/lib/params.ts          parseParams() for ?name ?gene ?variant ?country ?nation ?lang ?mode ?subtype ?d4z4_ru
 src/lib/catalogue.ts       condition search and resolve (data: public/data/catalogue.json)
 src/lib/gtr.ts             loads public/data/gtr/meta.json and per-letter shards on demand
 src/data/*.ts              hand-checked labs/offers, programmes, public routes, consumer kits, symptoms, countries
@@ -66,6 +67,21 @@ docs/research/             research notes, plan and the draft lab data this app 
 - Exomes: single letters and small indels yes; repeats and methylation no; CNV and mtDNA only where
   the lab says so. Genomes: CNV, repeats and mtDNA "unknown" unless the lab says so.
 
+## Subtypes (src/data/subtypes.ts)
+
+- For a condition with known types (FSHD now), the variant box becomes toggle buttons. The first
+  option must be "unknown" and is the default. Option ids are stable and shared with RDP and VV.
+- Each option can set `needed`, `steps`, `notes`, `sources`, `genes` (genes whose GTR tests we show),
+  `specialTests` (a group key in `public/data/gtr/special.json`), `repeats` (show the repeat units box)
+  and `custom` (free text kept as "Custom: <text>", never rewritten). `applySubtype()` merges it into
+  the normal profile; special tests and genes always come from the option.
+- A set can add `parseVariant` (read `?variant=` formats), `repeatNotes` and `display`.
+- The choice (id, repeat units, custom text, gene change) lives in React state only.
+- To add a condition: add a SubtypeSet with a `matches` rule, options and sources. If it needs tests
+  that gene lists cannot describe, add an entry to `SPECIAL` in `scripts/build_gtr_index.py` (a name
+  rule plus an explicit method rule; never hand-add labs) and rebuild.
+- FSHD ids: unknown, fshd1, fshd2-smchd1, fshd2-dnmt3b, fshd2-lrif1, fshd1-fshd2, fshd1-mosaic, custom.
+
 ## Data rules
 
 - Never invent a price, ability, programme, eligibility rule or country. Each price has a badge:
@@ -81,7 +97,7 @@ docs/research/             research notes, plan and the draft lab data this app 
 | --- | --- |
 | `bun install` | install |
 | `bun run dev` | dev server on port 8080 |
-| `bun run test` | vitest (70 tests at v1) |
+| `bun run test` | vitest |
 | `bun run typecheck` | TypeScript |
 | `bun run build` | static build to `dist/` |
 | `VV_REPO=../ee-repo RDP_REPO=../rdp-repo bun scripts/sync-catalogue.ts` | refresh catalogue |

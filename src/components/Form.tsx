@@ -1,4 +1,5 @@
 import { useId, useMemo, useState } from "react";
+import { unitsFromEcoRIkb, type SubtypeChoice, type SubtypeSet } from "@/data/subtypes";
 import { t, useLang } from "@/i18n";
 import type { Catalogue, Condition } from "@/lib/catalogue";
 import { COUNTRY_CODES } from "@/data/countries";
@@ -84,6 +85,57 @@ export function VariantInput({ value, onChange }: { value: string; onChange: (v:
       <p id={`${id}-h`} className="text-sm text-muted-foreground">{t("Copy it from a report, for example c.1234A>G, deletion of exons 45 to 50, or CGG repeat. It is not saved.")}</p>
       <input id={id} aria-describedby={`${id}-h`} type="text" autoComplete="off" className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2.5 text-base" value={value} onChange={(e) => onChange(e.target.value)} />
     </div>
+  );
+}
+
+export function SubtypePicker({ set, value, onChange }: { set: SubtypeSet; value: SubtypeChoice; onChange: (c: SubtypeChoice) => void }) {
+  const id = useId();
+  const [kb, setKb] = useState("");
+  const opt = set.options.find((o) => o.id === value.id) ?? set.options[0];
+  const est = kb.trim() ? unitsFromEcoRIkb(Number(kb.replace(",", "."))) : null;
+  return (
+    <fieldset>
+      <legend className="font-medium">{t(set.question)}</legend>
+      <p id={`${id}-h`} className="text-sm text-muted-foreground">{t("Pick Unknown if you are not sure. The type changes which test you need.")}</p>
+      <div className="mt-2 flex flex-wrap gap-2" role="group" aria-describedby={`${id}-h`}>
+        {set.options.map((o) => (
+          <button key={o.id} type="button" aria-pressed={value.id === o.id} onClick={() => onChange({ ...value, id: o.id })}
+            className={`rounded-md border px-3 py-2 text-start text-[15px] font-medium ${value.id === o.id ? "border-primary bg-primary text-primary-foreground" : "border-border bg-white"}`}>
+            {t(o.label)}
+          </button>
+        ))}
+      </div>
+      {opt.helper && <p className="mt-2 rounded bg-accent px-3 py-2 text-sm">{t(opt.helper)}</p>}
+      {opt.custom && (
+        <div className="mt-2">
+          <label htmlFor={`${id}-c`} className="block font-medium">{t("What does your report say?")}</label>
+          <input id={`${id}-c`} type="text" autoComplete="off" maxLength={200} className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2.5 text-base"
+            value={value.custom ?? ""} onChange={(e) => onChange({ ...value, custom: e.target.value })} />
+          <p className="mt-1 text-sm text-muted-foreground">{t("We show it back as written, starting with 'Custom:'. It is not saved.")}</p>
+          {(() => {
+            const guess = value.custom && set.parseVariant ? set.parseVariant(value.custom) : null;
+            const g = guess && guess.id !== "custom" && guess.id !== "unknown" ? set.options.find((o) => o.id === guess.id) : null;
+            return g ? <p className="mt-1 text-sm">{t("This looks like: {{type}}.", { type: t(g.label) })}{" "}<button type="button" className="underline" onClick={() => onChange({ id: g.id, ru: guess!.ru ?? null, change: guess!.change ?? null })}>{t("Switch to this type")}</button></p> : null;
+          })()}
+        </div>
+      )}
+      {opt.repeats && (
+        <div className="mt-2 grid gap-3 sm:grid-cols-2">
+          <div>
+            <label htmlFor={`${id}-ru`} className="block font-medium">{t("Number of D4Z4 repeat units (optional)")}</label>
+            <input id={`${id}-ru`} type="number" inputMode="numeric" min={1} max={150} className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2.5 text-base"
+              value={value.ru ?? ""} onChange={(e) => { const n = parseInt(e.target.value, 10); onChange({ ...value, ru: Number.isFinite(n) && n >= 1 && n <= 150 ? n : null }); }} />
+          </div>
+          <div>
+            <label htmlFor={`${id}-kb`} className="block font-medium">{t("Or: EcoRI size in kb from an older report")}</label>
+            <input id={`${id}-kb`} type="text" inputMode="decimal" autoComplete="off" className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2.5 text-base" value={kb} onChange={(e) => setKb(e.target.value)} aria-describedby={`${id}-kbh`} />
+            <p id={`${id}-kbh`} className="mt-1 text-sm" aria-live="polite">
+              {est != null ? <>{t("Estimate: about {{n}} repeat units", { n: est })}{" "}<button type="button" className="underline" onClick={() => onChange({ ...value, ru: Math.round(est) })}>{t("Use this estimate")}</button></> : t("Estimate = (kb minus 5) divided by 3.3. This is only an estimate and does not fit every lab method (not EcoRI/BlnI). If your report gives repeat units, use that number.")}
+            </p>
+          </div>
+        </div>
+      )}
+    </fieldset>
   );
 }
 

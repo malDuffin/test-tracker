@@ -12,6 +12,7 @@ Setup (about 1.6 GB, delete afterwards):
 Run:
   NLLB_DIR=/tmp/nllb /tmp/nllb/venv/bin/python scripts/translate_ui.py [lang ...]
 Only missing or changed keys are translated; existing translations are kept.
+Keep THREADS=1: with several threads the int8 model produced garbage on the build box (Nov 2026).
 """
 import json, os, re, sys, datetime
 import ctranslate2, sentencepiece as spm
@@ -28,7 +29,7 @@ CODES = {
 # Words kept exactly as they are (names, abbreviations, gene-like tokens)
 KEEP = ["Test Tracker", "Rare Disease Planet", "Rare Disease Body", "Variant Visual", "Genome Medical", "Northway Clinic",
         "Probably Genetic", "Blueprint Genetics", "CENTOGENE", "CeGaT", "23andMe", "AncestryDNA", "UDNF", "GTR", "NIH",
-        "NHS", "HSE", "AWMGS", "MLPA", "FSHD", "D4Z4", "SMCHD1", "SMN1", "SMN2", "DMD", "CMA", "CNV", "mtDNA", "RNA", "GP",
+        "NHS", "HSE", "AWMGS", "MLPA", "FSHD1", "FSHD2", "FSHD", "D4Z4", "4qA", "4q35", "SMCHD1", "DNMT3B", "LRIF1", "DUX4", "SMN1", "SMN2", "DMD", "CMA", "CNV", "mtDNA", "RNA", "GP",
         "team@rarediseaseplanet.com", "ncbi.nlm.nih.gov/gtr", "udnf.org", "Medicaid"]
 PH = re.compile(r"\{\{\w+\}\}")
 
@@ -54,8 +55,22 @@ def restore(s, toks):
 SPLIT = re.compile(r"(?<=[.?!])\s+(?=[A-Z(])")
 CJK = {"ja", "zh-Hans", "zh-Hant", "ko"}
 
+# Letters the target language may use besides Latin (names, gene symbols stay Latin).
+SCRIPT = {
+    "ar": r"\u0600-\u06FF", "fa": r"\u0600-\u06FF\u200c", "he": r"\u0590-\u05FF", "hi": r"\u0900-\u097F",
+    "ru": r"\u0400-\u04FF", "sr": r"\u0400-\u04FF", "el": r"\u0370-\u03FF\u1F00-\u1FFF",
+    "ja": r"\u3040-\u30FF\u4E00-\u9FFF\u3000-\u303F\uFF00-\uFFEF", "zh-Hans": r"\u4E00-\u9FFF\u3000-\u303F\uFF00-\uFFEF",
+    "zh-Hant": r"\u4E00-\u9FFF\u3000-\u303F\uFF00-\uFFEF", "ko": r"\uAC00-\uD7AF\u1100-\u11FF\u3130-\u318F\u4E00-\u9FFF",
+}
+
+def foreign_letters(out, lang):
+    allowed = r"A-Za-z\u00C0-\u024F\u1E00-\u1EFF" + SCRIPT.get(lang, "")
+    return re.findall(rf"[^\W\d_{allowed}]", out)
+
 def looks_bad(src, out, lang):
     if not out or "\u2047" in out or "??" in out:
+        return True
+    if foreign_letters(out, lang):
         return True
     ratio = len(out) / max(1, len(src))
     lo, hi = (0.2, 2.5) if lang in CJK else (0.45, 3.0)
@@ -65,11 +80,12 @@ def main():
     langs = sys.argv[1:] or list(CODES)
     en = json.load(open(os.path.join(I18N, "en.json")))
     sp = spm.SentencePieceProcessor(model_file=os.path.join(MODEL, "sentencepiece.bpe.model"))
-    tr = ctranslate2.Translator(MODEL, device="cpu", compute_type="int8", intra_threads=int(os.environ.get("THREADS", "2")))
+    tr = ctranslate2.Translator(MODEL, device="cpu", compute_type="int8", intra_threads=int(os.environ.get("THREADS", "1")))
     stats = {}
     for lang in langs:
         path = os.path.join(I18N, f"{lang}.json")
         old = json.load(open(path)) if os.path.exists(path) else {}
+        old = {k: v for k, v in old.items() if not foreign_letters(PH.sub("", v), lang)}
         todo = [k for k in en if k not in old]
         # Translate sentence by sentence (the model tends to drop later sentences), then rejoin.
         pieces = []  # (key index, sentence index, protected text, tokens)
@@ -87,7 +103,12 @@ def main():
                 text = sp.decode(r.hypotheses[0][1:]).strip()
                 fixed = restore(text, toks)
                 if fixed is None or looks_bad(ptxt, text, lang):
-                    fixed = None
+                    # one retry with a wider beam, alone in its batch
+                    r2 = tr.translate_batch([batch[j]], target_prefix=[[CODES[lang]]], beam_size=5, max_decoding_length=200)
+                    text = sp.decode(r2[0].hypotheses[0][1:]).strip()
+                    fixed = restore(text, toks)
+                    if fixed is None or looks_bad(ptxt, text, lang):
+                        fixed = None
                 done.setdefault(ki, {})[si] = fixed
         out = {}
         fails = 0
@@ -106,7 +127,7 @@ def main():
     meta_path = os.path.join(I18N, "_meta.json")
     meta = json.load(open(meta_path)) if os.path.exists(meta_path) else {}
     meta.update({
-        "note": "All non-English files are machine translated (NLLB-200 distilled 600M, offline) and not medically reviewed. Missing keys fall back to English.",
+        "note": "All non-English files are machine translated (NLLB-200 distilled 1.3B, offline) and not medically reviewed. Missing keys fall back to English.",
         "updated": datetime.date.today().isoformat(),
         "languages": {**meta.get("languages", {}), **stats},
     })

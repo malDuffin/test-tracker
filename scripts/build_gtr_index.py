@@ -28,7 +28,18 @@ CURATED = {
     "500188": "blueprint", "279559": "centogene", "319947": "cegat",
 }
 
-F_SEQ, F_SEQ_PART, F_DELDUP, F_REPEAT, F_METH, F_TARGETED, F_CYTO, F_RNA, F_UPD = 1, 2, 4, 8, 16, 32, 64, 128, 256
+F_SEQ, F_SEQ_PART, F_DELDUP, F_REPEAT, F_METH, F_TARGETED, F_CYTO, F_RNA, F_UPD, F_D4Z4 = 1, 2, 4, 8, 16, 32, 64, 128, 256, 512
+
+# Special test groups found by test or condition name AND an explicit method, for changes that
+# gene lists cannot describe. Only tests that list one of the methods are included (never guessed).
+SPECIAL = {
+    "fshd-d4z4": {
+        "label": "D4Z4 sizing for FSHD1 (optical genome mapping, Southern blot or molecular combing)",
+        "badge": "Measures the D4Z4 region (finds FSHD1)",
+        "name": re.compile(r"facioscapulohumeral|fascioscapulohumeral|\bfshd|d4z4", re.I),
+        "method": re.compile(r"optical|southern|combing", re.I),
+    },
+}
 
 def fix_text(s: str) -> str:
     """Some GTR names are double-encoded (UTF-8 read as Latin-1, e.g. 'UnityÂ®'). Undo that when it round-trips."""
@@ -39,9 +50,10 @@ def fix_text(s: str) -> str:
             return s
     return s
 
-def flags(cats: str, methods: str) -> int:
+def flags(cats: str, methods: str, about: str = "") -> int:
     c, m = cats.lower(), methods.lower()
     f = 0
+    if SPECIAL["fshd-d4z4"]["name"].search(about) and SPECIAL["fshd-d4z4"]["method"].search(m): f |= F_D4Z4
     if "entire coding region" in c: f |= F_SEQ
     if "select exons" in c: f |= F_SEQ_PART
     if "deletion/duplication" in c: f |= F_DELDUP
@@ -77,6 +89,7 @@ def main():
     labs = {}         # lab_id -> [name, country, curated]
     per_gene = collections.defaultdict(list)
     n_current = 0
+    special = {k: [] for k in SPECIAL}
     with gzip.open(raw, "rt", encoding="utf-8", errors="replace") as fh:
         for d in csv.DictReader(fh, delimiter="\t"):
             if (d["now_current"], d["test_currStat"], d["test_pubStat"], d["lab_currStat"]) != ("1", "1", "3", "1"):
@@ -84,12 +97,19 @@ def main():
             n_current += 1
             genes = [g.upper() for g in d["genes"].strip('"').split("|") if g]
             hits = [g for g in genes if g in want]
+            about = d["lab_test_name"] + " " + d["condition_identifiers"]
+            lid = d["lab_id"]
+            for key, sp in SPECIAL.items():
+                if sp["name"].search(about) and sp["method"].search(d["methods"]):
+                    if lid not in labs:
+                        labs[lid] = [fix_text(d["name_of_laboratory"].strip()), d["facility_country"].strip(), CURATED.get(lid)]
+                    meths = sorted({x for x in d["methods"].split("|") if sp["method"].search(x)})
+                    special[key].append([d["test_accession_ver"], lid, fix_text(d["lab_test_name"].strip())[:90], ", ".join(meths), d["last_touch_date"][:10]])
             if not hits:
                 continue
-            lid = d["lab_id"]
             if lid not in labs:
                 labs[lid] = [fix_text(d["name_of_laboratory"].strip()), d["facility_country"].strip(), CURATED.get(lid)]
-            fl = flags(d["method_categories"], d["methods"])
+            fl = flags(d["method_categories"], d["methods"], about)
             row = (d["test_accession_ver"], lid, fix_text(d["lab_test_name"].strip())[:90], fl, len(genes), d["last_touch_date"][:10])
             for g in hits:
                 per_gene[g].append(row)
@@ -141,6 +161,9 @@ def main():
         "labs": [labs[k] for k in lab_ids],
         "genes": gene_shard,
     }
+    with open(os.path.join(OUT, "special.json"), "w") as f:
+        json.dump({k: {"label": SPECIAL[k]["label"], "badge": SPECIAL[k]["badge"], "t": [[r[0], lab_index[r[1]], r[2], r[3], r[4]] for r in sorted(v, key=lambda r: r[4], reverse=True)]} for k, v in special.items()}, f, separators=(",", ":"))
+    stats["special"] = {k: len(v) for k, v in special.items()}
     with open(os.path.join(OUT, "meta.json"), "w") as f:
         json.dump(meta, f, separators=(",", ":"))
     print(json.dumps({k: v for k, v in meta.items() if k not in ("labs", "genes")}), "labs:", len(lab_ids))

@@ -4,7 +4,7 @@ import { parseParams } from "../src/lib/params";
 describe("parseParams", () => {
   it("reads all parameters", () => {
     const p = parseParams("?name=Duchenne%20muscular%20dystrophy&gene=dmd&variant=c.1234A%3EG&country=gb&nation=sct&lang=fr");
-    expect(p).toEqual({ name: "Duchenne muscular dystrophy", gene: "DMD", variant: "c.1234A>G", country: "GB", nation: "sct", lang: "fr", undiagnosed: false });
+    expect(p).toEqual({ name: "Duchenne muscular dystrophy", gene: "DMD", variant: "c.1234A>G", country: "GB", nation: "sct", lang: "fr", undiagnosed: false, subtype: null, d4z4Ru: null });
   });
   it("accepts UK as GB and ignores nation outside the UK", () => {
     expect(parseParams("country=UK").country).toBe("GB");

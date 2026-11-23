@@ -64,6 +64,8 @@ export const KITS: Kit[] = [
 /** A plain line on what this kit can and cannot tell you for the chosen condition. English i18n key; parts are i18n keys joined into {{what}}. */
 export function kitLine(kit: Kit, needed: VariantKind[], known: VariantKind | null): { text: string; parts?: string[] } {
   const kinds = known && known !== "unknown" ? [known] : needed;
+  if (kinds.includes("d4z4"))
+    return { text: "Cannot measure the D4Z4 region that causes FSHD1. A clear result tells you nothing about FSHD." };
   if (kit.kind === "chip") {
     if (kinds.includes("exon_cnv") || kinds.includes("repeat") || kinds.includes("large_cnv") || kinds.includes("methylation"))
       return { text: "Cannot see the kind of change that matters here (missing or extra pieces, repeats or methylation). A clear result tells you nothing about this condition." };

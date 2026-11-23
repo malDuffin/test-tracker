@@ -3,7 +3,8 @@ import { LANGUAGES, getLanguage, initialLanguage, setLanguage, t, useLang } from
 import { parseParams } from "@/lib/params";
 import { loadCatalogue, type Catalogue, type Condition } from "@/lib/catalogue";
 import { loadGtrMeta, type GtrMeta } from "@/lib/gtr";
-import { ConditionSearch, CountryPicker, DoctorPicker, SymptomPicker, VariantInput, type Doctor } from "@/components/Form";
+import { ConditionSearch, CountryPicker, DoctorPicker, SubtypePicker, SymptomPicker, VariantInput, type Doctor } from "@/components/Form";
+import { choiceFromParams, subtypeSetFor, type SubtypeChoice } from "@/data/subtypes";
 import { Results } from "@/components/Results";
 import { formatDate } from "@/lib/format";
 import { CHECKED, UDNF } from "@/data/labs";
@@ -24,6 +25,9 @@ export default function App() {
   const [country, setCountry] = useState<string | null>(params.country);
   const [nation, setNation] = useState<string | null>(params.nation);
   const [doctor, setDoctor] = useState<Doctor | null>(null);
+  const [subtype, setSubtype] = useState<SubtypeChoice>({ id: "unknown" });
+  const subtypeSet = useMemo(() => (mode === "known" ? subtypeSetFor(condition) : null), [condition, mode]);
+  const choice: SubtypeChoice | null = subtypeSet ? (subtypeSet.options.some((o) => o.id === subtype.id) ? subtype : { id: subtypeSet.options[0].id }) : null;
 
   useEffect(() => {
     setLanguage(initialLanguage(params.lang));
@@ -31,7 +35,10 @@ export default function App() {
       setCatalogue(c);
       if (params.name || params.gene) {
         const hit = c.resolve(params.name, params.gene);
-        if (hit) setCondition(hit);
+        if (hit) {
+          setCondition(hit);
+          setSubtype(choiceFromParams(subtypeSetFor(hit), params.subtype, params.variant, params.d4z4Ru) ?? { id: "unknown" });
+        }
         else if (params.name) setUnmatchedName(params.name);
       }
     });
@@ -41,6 +48,7 @@ export default function App() {
   const pickCondition = (c: Condition | null) => {
     setCondition(c);
     setUnmatchedName(null);
+    setSubtype({ id: "unknown" });
     setGene(c ? (gene && c.genes.includes(gene) ? gene : c.genes[0] ?? null) : null);
   };
 
@@ -100,7 +108,7 @@ export default function App() {
             <>
               {unmatchedName && <p className="rounded bg-partly/20 px-3 py-2 text-sm" role="status">{t("We could not find '{{name}}' in our list. Try searching below.", { name: unmatchedName })}</p>}
               <ConditionSearch key={condition?.label ?? unmatchedName ?? "empty"} catalogue={catalogue} value={condition} onPick={pickCondition} initialText={condition?.label ?? unmatchedName ?? undefined} />
-              <VariantInput value={variant} onChange={setVariant} />
+              {subtypeSet && choice ? <SubtypePicker set={subtypeSet} value={choice} onChange={setSubtype} /> : <VariantInput value={variant} onChange={setVariant} />}
             </>
           ) : (
             <SymptomPicker value={symptoms} onChange={setSymptoms} />
@@ -110,7 +118,7 @@ export default function App() {
         </form>
 
         {showResults && (
-          <Results condition={mode === "known" ? condition : null} gene={mode === "known" ? gene : null} variantText={variant} symptoms={symptoms} country={country} nation={nation} doctor={doctor} meta={meta} undiagnosed={mode === "undiagnosed"} />
+          <Results condition={mode === "known" ? condition : null} gene={mode === "known" ? gene : null} variantText={subtypeSet ? "" : variant} choice={choice} symptoms={symptoms} country={country} nation={nation} doctor={doctor} meta={meta} undiagnosed={mode === "undiagnosed"} />
         )}
       </main>
 
