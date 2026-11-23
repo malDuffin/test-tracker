@@ -1,0 +1,1384 @@
+{
+  "schema_version": "0.1-draft",
+  "generated": "2026-11-23",
+  "status": "DRAFT research data. Not for publication until each row is re-verified on the lab's own page. Secondary prices are flagged.",
+  "price_types": {
+    "patient pay": "Lab's own published patient price",
+    "clinic price": "UK private clinic published price",
+    "estimated self-pay (secondary)": "From UDNF Clinical Genetic Testing Lab Comparison Guide updated 25 Mar 2026, not from the lab",
+    "quote": "Lab does not publish; must ask"
+  },
+  "labs": [
+    {
+      "id": "labcorp-invitae",
+      "name": "Invitae (Labcorp)",
+      "kind": "clinical_lab",
+      "hq": "US",
+      "countries_served": "US; patient-pay option outside the US (non-US private insurance not accepted)",
+      "test_types": [
+        "single gene",
+        "panels",
+        "exome",
+        "del/dup included in many panels (check per test)"
+      ],
+      "doctor_order_required": true,
+      "telehealth_ordering": "Genome Medical partnership (per UDNF guide)",
+      "prices": [
+        {
+          "test": "Financial Assistance flat rate, rare disease (non-cancer) panel",
+          "amount": 299,
+          "currency": "USD",
+          "price_type": "income-qualified flat rate",
+          "source": {
+            "url": "https://www.invitae.com/new-programs-2025",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "Comprehensive Genetic Risk Panel (unaffected people)",
+          "amount": 299,
+          "currency": "USD",
+          "price_type": "patient pay",
+          "source": {
+            "url": "https://www.invitae.com/new-programs-2025",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "Exome, one person",
+          "amount": 1250,
+          "currency": "USD",
+          "price_type": "patient pay",
+          "source": {
+            "url": "https://mdanderson.cloud-cme.com/assets/mdanderson/pdf/6th%20Hereditary/BI%20Exception%20Billing%20Postcard%20(PC123)%20(1).PDF",
+            "read": "2026-11-23"
+          },
+          "note": "Undated third-party copy of Invitae billing postcard PC123-8; confirm before publishing"
+        },
+        {
+          "test": "Exome, 2-3 family members",
+          "amount": 2500,
+          "currency": "USD",
+          "price_type": "patient pay",
+          "source": {
+            "url": "https://mdanderson.cloud-cme.com/assets/mdanderson/pdf/6th%20Hereditary/BI%20Exception%20Billing%20Postcard%20(PC123)%20(1).PDF",
+            "read": "2026-11-23"
+          },
+          "note": "Same caveat"
+        },
+        {
+          "test": "Panels (range)",
+          "amount": "2500-4000",
+          "currency": "USD",
+          "price_type": "estimated self-pay range (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          },
+          "note": "UDNF guide 25 Mar 2026; conflicts with Invitae's own $299 flat-rate page; needs lab confirmation"
+        },
+        {
+          "test": "WES proband",
+          "amount": 3522,
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          },
+          "note": "UDNF guide 25 Mar 2026"
+        }
+      ],
+      "turnaround": null,
+      "samples": [
+        "blood",
+        "saliva",
+        "buccal"
+      ],
+      "samples_source": {
+        "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+        "read": "2026-11-23"
+      },
+      "raw_data": null,
+      "counselling": "Post-test counselling free in sponsored programmes; Genome Medical partnership",
+      "privacy_notes": "Sponsored programmes share de-identified data and clinician contact details with sponsors/third parties",
+      "privacy_source": {
+        "url": "https://www.invitae.com/us/genetic-testing-access-programs",
+        "read": "2026-11-23"
+      },
+      "gtr": {
+        "current_public_tests": 333,
+        "last_touch_median": "2021-07-13"
+      },
+      "sources": [
+        {
+          "url": "https://www.invitae.com/new-programs-2025",
+          "read": "2026-11-23"
+        },
+        {
+          "url": "https://www.invitae.com/individual-faqs/billing",
+          "read": "2026-11-23"
+        },
+        {
+          "url": "https://www.invitae.com/us/genetic-testing-access-programs",
+          "read": "2026-11-23"
+        },
+        {
+          "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+          "read": "2026-11-23"
+        }
+      ]
+    },
+    {
+      "id": "genedx",
+      "name": "GeneDx",
+      "kind": "clinical_lab",
+      "hq": "US",
+      "countries_served": "US (insurance); international not verified",
+      "test_types": [
+        "panels",
+        "exome",
+        "genome"
+      ],
+      "doctor_order_required": true,
+      "telehealth_ordering": "Genome Medical: $250 pre-test counselling + ordering + results summary, $250 optional post-test (lab billed separately)",
+      "prices": [
+        {
+          "test": "WES proband",
+          "amount": 1200,
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "WES duo",
+          "amount": 1750,
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "WES trio",
+          "amount": 2250,
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "WGS proband",
+          "amount": 2000,
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "WGS duo",
+          "amount": 2500,
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "WGS trio",
+          "amount": 3250,
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "Panels (range)",
+          "amount": "300-2000",
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "Genome Medical ordering visit",
+          "amount": 250,
+          "currency": "USD",
+          "price_type": "self-pay",
+          "source": {
+            "url": "https://www.genedx.com/patients/resources/billing-and-insurance",
+            "read": "2026-11-23"
+          }
+        }
+      ],
+      "price_note": "GeneDx does not publish a cash price; it states self-pay pricing, interest-free payment plans and financial assistance exist",
+      "turnaround": null,
+      "samples": [
+        "blood",
+        "saliva"
+      ],
+      "raw_data": null,
+      "counselling": "Appointments for education, ordering, pre/post-test counselling via Genome Medical (UDNF)",
+      "gtr": {
+        "current_public_tests": 137,
+        "last_touch_median": "2025-10-08"
+      },
+      "sources": [
+        {
+          "url": "https://www.genedx.com/patients/resources/billing-and-insurance",
+          "read": "2026-11-23"
+        },
+        {
+          "url": "https://www.genedx.com/providers/genetic-testing-programs",
+          "read": "2026-11-23"
+        },
+        {
+          "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+          "read": "2026-11-23"
+        }
+      ]
+    },
+    {
+      "id": "fulgent",
+      "name": "Fulgent Genetics",
+      "kind": "clinical_lab",
+      "hq": "US",
+      "countries_served": "US; UK via Northway Clinic London (private clinic)",
+      "test_types": [
+        "single gene",
+        "panels",
+        "exome (20,579 genes, mtDNA included, del/dup option)",
+        "genome (FulGenome)",
+        "RNA (RISE)"
+      ],
+      "doctor_order_required": true,
+      "telehealth_ordering": null,
+      "prices": [
+        {
+          "test": "Whole exome",
+          "amount": "call for details",
+          "currency": "USD",
+          "price_type": "not published",
+          "source": {
+            "url": "https://www.fulgentgenetics.com/whole-exome",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "UK: WES singleton via Northway Clinic",
+          "amount": 2000,
+          "currency": "GBP",
+          "price_type": "clinic price",
+          "source": {
+            "url": "https://northwayclinic.co.uk/services/comprehensive-genomic-testing-exome-genome/",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "UK: WES duo via Northway Clinic",
+          "amount": 3000,
+          "currency": "GBP",
+          "price_type": "clinic price",
+          "source": {
+            "url": "https://northwayclinic.co.uk/services/comprehensive-genomic-testing-exome-genome/",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "UK: WES trio via Northway Clinic",
+          "amount": 3500,
+          "currency": "GBP",
+          "price_type": "clinic price",
+          "source": {
+            "url": "https://northwayclinic.co.uk/services/comprehensive-genomic-testing-exome-genome/",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "UK: FulGenome singleton via Northway Clinic",
+          "amount": 3000,
+          "currency": "GBP",
+          "price_type": "clinic price",
+          "source": {
+            "url": "https://northwayclinic.co.uk/services/comprehensive-genomic-testing-exome-genome/",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "UK: FulGenome trio via Northway Clinic",
+          "amount": 4500,
+          "currency": "GBP",
+          "price_type": "clinic price",
+          "source": {
+            "url": "https://northwayclinic.co.uk/services/comprehensive-genomic-testing-exome-genome/",
+            "read": "2026-11-23"
+          }
+        }
+      ],
+      "price_note": "Self-pay cash price exists; Good Faith Estimate by phone (https://web.fulgentgenetics.com/resources/billing). UK clinic prices may exclude consultation fee.",
+      "turnaround": "3-5 weeks (whole-exome page) / 5-7 weeks (exome overview page): pages disagree",
+      "samples": null,
+      "raw_data": null,
+      "counselling": "Fulgent genetic counsellor reviews WES orders before testing",
+      "duo_trio": "Duo/trio at no extra cost (exome overview page)",
+      "gtr": {
+        "current_public_tests": 19299,
+        "last_touch_median": "2019-04-02"
+      },
+      "sources": [
+        {
+          "url": "https://www.fulgentgenetics.com/whole-exome",
+          "read": "2026-11-23"
+        },
+        {
+          "url": "https://web.fulgentgenetics.com/genomic-testing/exome",
+          "read": "2026-11-23"
+        },
+        {
+          "url": "https://web.fulgentgenetics.com/resources/billing",
+          "read": "2026-11-23"
+        },
+        {
+          "url": "https://northwayclinic.co.uk/services/comprehensive-genomic-testing-exome-genome/",
+          "read": "2026-11-23"
+        }
+      ]
+    },
+    {
+      "id": "preventiongenetics",
+      "name": "PreventionGenetics (Exact Sciences)",
+      "kind": "clinical_lab",
+      "hq": "US",
+      "countries_served": "US (in-network many plans); international not verified",
+      "test_types": [
+        "single gene",
+        "panels",
+        "PGxome exome (CNV + mtDNA included)",
+        "PGnome genome",
+        "PGmax"
+      ],
+      "doctor_order_required": true,
+      "prices": [
+        {
+          "test": "Panels (typical)",
+          "amount": 550,
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "Prompt-pay discount",
+          "amount": "25% off PGxome/PGnome/PGmax",
+          "currency": "USD",
+          "price_type": "pre-service prompt pay",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          },
+          "note": "Lab page confirms prompt-pay rates exist for all tests: https://www.preventiongenetics.com/coverage"
+        }
+      ],
+      "turnaround": "PGxome 3-5 weeks",
+      "samples": [
+        "blood",
+        "buccal",
+        "saliva",
+        "tissue"
+      ],
+      "raw_data": null,
+      "counselling": null,
+      "gtr": {
+        "current_public_tests": 756,
+        "last_touch_median": "2025-11-06"
+      },
+      "sources": [
+        {
+          "url": "https://www.preventiongenetics.com/tests/pgxome-whole-exome-test",
+          "read": "2026-11-23"
+        },
+        {
+          "url": "https://www.preventiongenetics.com/articles/pgxome-next-gen",
+          "read": "2026-11-23"
+        },
+        {
+          "url": "https://www.preventiongenetics.com/coverage",
+          "read": "2026-11-23"
+        },
+        {
+          "url": "https://www.preventiongenetics.com/sponsored-testing",
+          "read": "2026-11-23"
+        },
+        {
+          "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+          "read": "2026-11-23"
+        }
+      ]
+    },
+    {
+      "id": "revvity",
+      "name": "Revvity Omics",
+      "kind": "clinical_lab",
+      "hq": "US",
+      "countries_served": "US and international (lab notes availability varies by country)",
+      "test_types": [
+        "panels",
+        "exome + mtDNA + exon-level CNV",
+        "DMD (Decode Duchenne lab)"
+      ],
+      "doctor_order_required": true,
+      "prices": [
+        {
+          "test": "Whole Exome Sequencing Proband Only (D1000)",
+          "amount": 900,
+          "currency": "USD",
+          "price_type": "self (patient) price",
+          "source": {
+            "url": "https://www.revvity.com/test/Whole-Exome-Sequencing-Proband-Only-D1000",
+            "read": "2026-11-23"
+          }
+        }
+      ],
+      "turnaround": "4 weeks (D1000)",
+      "samples": [
+        "EDTA blood (preferred)",
+        "saliva",
+        "dried blood spot",
+        "isolated DNA"
+      ],
+      "raw_data": "Yes, included (D1000 page)",
+      "counselling": null,
+      "limitations_source": "D1000 page lists: no deep intronic/promoter outside curated, no tandem repeats, no methylation, no balanced rearrangements, mosaicism not designed",
+      "gtr": {
+        "current_public_tests": 3,
+        "note": "Registered as Revvity Omics: 3; legacy PerkinElmer Genetics: 513"
+      },
+      "sources": [
+        {
+          "url": "https://www.revvity.com/test/Whole-Exome-Sequencing-Proband-Only-D1000",
+          "read": "2026-11-23"
+        }
+      ]
+    },
+    {
+      "id": "ambry",
+      "name": "Ambry Genetics",
+      "kind": "clinical_lab",
+      "hq": "US",
+      "countries_served": "US",
+      "test_types": [
+        "panels",
+        "exome"
+      ],
+      "doctor_order_required": true,
+      "prices": [
+        {
+          "test": "Oncology panel",
+          "amount": 249,
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "Cardiology panel",
+          "amount": 650,
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "WES (range)",
+          "amount": "800-1000",
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          }
+        }
+      ],
+      "samples": [
+        "blood",
+        "saliva",
+        "buccal"
+      ],
+      "gtr": {
+        "current_public_tests": 93,
+        "last_touch_median": "2023-03-29"
+      },
+      "sources": [
+        {
+          "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+          "read": "2026-11-23"
+        },
+        {
+          "url": "https://www.ambrygen.com/partners/sponsored-testing",
+          "read": "2026-11-23"
+        }
+      ]
+    },
+    {
+      "id": "baylor",
+      "name": "Baylor Genetics",
+      "kind": "clinical_lab",
+      "hq": "US",
+      "countries_served": "US",
+      "test_types": [
+        "panels",
+        "exome",
+        "genome",
+        "CMA"
+      ],
+      "doctor_order_required": true,
+      "prices": [
+        {
+          "test": "WES proband",
+          "amount": 1800,
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "WGS proband",
+          "amount": 3000,
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "CMA",
+          "amount": 1200,
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          }
+        }
+      ],
+      "samples": [
+        "blood",
+        "saliva",
+        "tissue"
+      ],
+      "counselling": "Post-test counselling and provider education; no pre-test counselling (UDNF)",
+      "gtr": {
+        "current_public_tests": 2628,
+        "last_touch_median": "2019-07-01"
+      },
+      "sources": [
+        {
+          "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+          "read": "2026-11-23"
+        }
+      ]
+    },
+    {
+      "id": "variantyx",
+      "name": "Variantyx",
+      "kind": "clinical_lab",
+      "hq": "US",
+      "countries_served": "US",
+      "test_types": [
+        "panels",
+        "exome",
+        "genome (Genomic Unity)",
+        "CMA"
+      ],
+      "doctor_order_required": true,
+      "prices": [
+        {
+          "test": "Rare disease panels",
+          "amount": 850,
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "WES proband",
+          "amount": 1800,
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "WES duo or trio",
+          "amount": 2100,
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "WGS proband, duo or trio",
+          "amount": 2100,
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "CMA",
+          "amount": 850,
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          }
+        }
+      ],
+      "samples": [
+        "blood",
+        "saliva"
+      ],
+      "counselling": "No in-house counsellors; connects to third-party GCs (UDNF)",
+      "gtr": {
+        "current_public_tests": 45,
+        "last_touch_median": "2025-12-02"
+      },
+      "sources": [
+        {
+          "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+          "read": "2026-11-23"
+        },
+        {
+          "url": "https://www.variantyx.com/resources/patient-resources/billing/",
+          "read": "2026-11-23"
+        }
+      ]
+    },
+    {
+      "id": "blueprint",
+      "name": "Blueprint Genetics (Quest)",
+      "kind": "clinical_lab",
+      "hq": "Finland",
+      "countries_served": "International (patient payment by card or bank transfer); exact country list not verified",
+      "test_types": [
+        "panels",
+        "exome"
+      ],
+      "doctor_order_required": true,
+      "order_note": "Healthcare provider must select patient payment; patient gets a payment link",
+      "prices": [
+        {
+          "test": "Panels (range)",
+          "amount": "1450-1750",
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "WES proband",
+          "amount": 2500,
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "WES duo",
+          "amount": 3250,
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "WES trio",
+          "amount": 4000,
+          "currency": "USD",
+          "price_type": "estimated self-pay (secondary)",
+          "source": {
+            "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+            "read": "2026-11-23"
+          }
+        }
+      ],
+      "samples": [
+        "blood",
+        "saliva"
+      ],
+      "payment": "Visa/Mastercard link or bank transfer; no instalments (patients page)",
+      "gtr": {
+        "current_public_tests": 228,
+        "last_touch_median": "2019-03-30"
+      },
+      "sources": [
+        {
+          "url": "https://www.blueprintgenetics.com/patients/",
+          "read": "2026-11-23"
+        },
+        {
+          "url": "https://udnf.org/download/4625/?tmstv=1780428553",
+          "read": "2026-11-23"
+        }
+      ]
+    },
+    {
+      "id": "centogene",
+      "name": "CENTOGENE",
+      "kind": "clinical_lab",
+      "hq": "Germany",
+      "countries_served": "International; outside Germany needs signed cost-coverage statement (to verify on source)",
+      "test_types": [
+        "panels",
+        "CentoXome exome",
+        "CentoGenome genome"
+      ],
+      "doctor_order_required": true,
+      "order_note": "Physician orders in CentoPortal; 'Self-pay (Patient/Relative)' billing exists",
+      "prices": [
+        {
+          "test": "Exome / genome",
+          "amount": "not published",
+          "currency": "EUR",
+          "price_type": "quote",
+          "source": {
+            "url": "https://www.centogene.com/diagnostics/how-to-order-ship/billing-options/",
+            "read": "2026-11-23"
+          }
+        }
+      ],
+      "turnaround": "Not verified on lab page (search summary said CentoXome <=30 business days; confirm)",
+      "gtr": {
+        "current_public_tests": 2,
+        "last_touch_median": "2022-08-28"
+      },
+      "sources": [
+        {
+          "url": "https://www.centogene.com/diagnostics/how-to-order-ship/billing-options/",
+          "read": "2026-11-23"
+        },
+        {
+          "url": "https://www.centogene.com/wp-content/uploads/2022/07/CentoPortal-%E2%80%93-How-to-Order-Guide-V2.0.pdf",
+          "read": "2026-11-23"
+        }
+      ]
+    },
+    {
+      "id": "cegat",
+      "name": "CeGaT",
+      "kind": "clinical_lab",
+      "hq": "Germany",
+      "countries_served": "International; patients insured in Germany routed to Zentrum fuer Humangenetik Tuebingen",
+      "test_types": [
+        "panels",
+        "ExomeFocus",
+        "Single/Trio ExomeXtra (exome + genome backbone + array-level CNV)",
+        "Whole genome as second-line"
+      ],
+      "doctor_order_required": true,
+      "prices": [
+        {
+          "test": "Exome",
+          "amount": "not published (relative tiers only)",
+          "currency": "EUR",
+          "price_type": "quote",
+          "source": {
+            "url": "https://cegat.com/diagnostics/diagnostic-methods/exome-diagnostics/",
+            "read": "2026-11-23"
+          }
+        }
+      ],
+      "reanalysis": "Free reassessment 12 months to 5 years after unsolved exome/genome report",
+      "accreditation": "CAP/CLIA, ISO 15189",
+      "gtr": {
+        "current_public_tests": 960,
+        "last_touch_median": "2015-10-10"
+      },
+      "sources": [
+        {
+          "url": "https://cegat.com/diagnostics/diagnostic-methods/exome-diagnostics/",
+          "read": "2026-11-23"
+        }
+      ]
+    },
+    {
+      "id": "genome-medical",
+      "name": "Genome Medical",
+      "kind": "telehealth_orderer",
+      "hq": "US",
+      "countries_served": "US",
+      "role": "Self-referral telehealth genetic counselling; can order a test after a counselling visit. Lab bills separately.",
+      "doctor_order_required": false,
+      "prices": [
+        {
+          "test": "Genetic counselling visit (pre or post test)",
+          "amount": "up to 250",
+          "currency": "USD",
+          "price_type": "self-pay",
+          "source": {
+            "url": "https://www.genomemedical.com/genetics-care/cost-of-genetic-counseling-and-testing/",
+            "read": "2026-11-23"
+          }
+        }
+      ],
+      "notes": "Does not accept Medicare/Medicaid/Tricare for counselling (page dated 28 Jan 2026)",
+      "sources": [
+        {
+          "url": "https://www.genomemedical.com/genetics-care/cost-of-genetic-counseling-and-testing/",
+          "read": "2026-11-23"
+        }
+      ]
+    },
+    {
+      "id": "northway-uk",
+      "name": "Northway Clinic (London)",
+      "kind": "uk_private_clinic",
+      "hq": "UK",
+      "countries_served": "UK (in person, London)",
+      "role": "Private clinic consultation; testing through Fulgent",
+      "doctor_order_required": false,
+      "order_note": "Clinic consultation replaces GP/NHS referral",
+      "prices": [
+        {
+          "test": "Clinical or whole exome singleton/duo/trio",
+          "amount": "2000/3000/3500",
+          "currency": "GBP",
+          "price_type": "clinic price",
+          "source": {
+            "url": "https://northwayclinic.co.uk/services/comprehensive-genomic-testing-exome-genome/",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "FulGenome singleton/duo/trio",
+          "amount": "3000/4000/4500",
+          "currency": "GBP",
+          "price_type": "clinic price",
+          "source": {
+            "url": "https://northwayclinic.co.uk/services/comprehensive-genomic-testing-exome-genome/",
+            "read": "2026-11-23"
+          }
+        }
+      ],
+      "notes": "RISE RNA included with WES/FulGenome; up to two relatives may be tested for a VUS at no cost (lab approval). Consultation fee not stated on page.",
+      "sources": [
+        {
+          "url": "https://northwayclinic.co.uk/services/comprehensive-genomic-testing-exome-genome/",
+          "read": "2026-11-23"
+        }
+      ]
+    },
+    {
+      "id": "genome-clinic-uk",
+      "name": "The Genome Clinic (Cardiff / online)",
+      "kind": "uk_private_clinic",
+      "hq": "UK",
+      "countries_served": "UK (Spire Cardiff or online video)",
+      "role": "Consultant clinical geneticist; tests outsourced to accredited labs; self-referral allowed",
+      "doctor_order_required": false,
+      "prices": [
+        {
+          "test": "Consultation",
+          "amount": 350,
+          "currency": "GBP",
+          "price_type": "tariff from 1 Apr 2026",
+          "source": {
+            "url": "https://www.genomeclinic.co.uk/professional-fees-and-tariff/",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "Genetic counselling",
+          "amount": 300,
+          "currency": "GBP",
+          "price_type": "tariff",
+          "source": {
+            "url": "https://www.genomeclinic.co.uk/professional-fees-and-tariff/",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "Single disease DNA test",
+          "amount": 950,
+          "currency": "GBP",
+          "price_type": "tariff",
+          "source": {
+            "url": "https://www.genomeclinic.co.uk/professional-fees-and-tariff/",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "Microarray (aCGH)",
+          "amount": 750,
+          "currency": "GBP",
+          "price_type": "tariff",
+          "source": {
+            "url": "https://www.genomeclinic.co.uk/professional-fees-and-tariff/",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "Targeted / comprehensive panel",
+          "amount": "1500 / 2000",
+          "currency": "GBP",
+          "price_type": "tariff",
+          "source": {
+            "url": "https://www.genomeclinic.co.uk/professional-fees-and-tariff/",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "Clinical/whole exome incl. CNVs",
+          "amount": 2500,
+          "currency": "GBP",
+          "price_type": "tariff",
+          "source": {
+            "url": "https://www.genomeclinic.co.uk/professional-fees-and-tariff/",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "Trio exome",
+          "amount": 4000,
+          "currency": "GBP",
+          "price_type": "tariff",
+          "source": {
+            "url": "https://www.genomeclinic.co.uk/professional-fees-and-tariff/",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "WGS single / trio",
+          "amount": "3500 / 5000",
+          "currency": "GBP",
+          "price_type": "tariff",
+          "source": {
+            "url": "https://www.genomeclinic.co.uk/professional-fees-and-tariff/",
+            "read": "2026-11-23"
+          }
+        }
+      ],
+      "notes": "Tariff note says lab cost with report 'advised separately'; check whether listed test prices are all-in.",
+      "sources": [
+        {
+          "url": "https://www.genomeclinic.co.uk/professional-fees-and-tariff/",
+          "read": "2026-11-23"
+        }
+      ]
+    },
+    {
+      "id": "dante",
+      "name": "Dante Labs",
+      "kind": "consumer_wgs",
+      "hq": "Italy/US",
+      "countries_served": "Worldwide shipping",
+      "test_types": [
+        "30x whole genome (saliva)"
+      ],
+      "doctor_order_required": false,
+      "prices": [
+        {
+          "test": "Core",
+          "amount": 199,
+          "currency": "USD",
+          "price_type": "sale price (was 449)",
+          "source": {
+            "url": "https://dantelabs.com/whole-genome-sequencing",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "Premium first year",
+          "amount": 298,
+          "currency": "USD",
+          "price_type": "sale price",
+          "source": {
+            "url": "https://dantelabs.com/whole-genome-sequencing",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "Premium + AI first year",
+          "amount": 399,
+          "currency": "USD",
+          "price_type": "sale price",
+          "source": {
+            "url": "https://dantelabs.com/whole-genome-sequencing",
+            "read": "2026-11-23"
+          }
+        }
+      ],
+      "turnaround": "6-8 weeks",
+      "raw_data": "FASTQ, BAM, VCF downloadable",
+      "claims": "States CLIA/CAP/ISO 15189 and 'physician-ready' ACMG-classified reports; not a phenotype-driven diagnostic exome/genome ordered for a specific patient question",
+      "sources": [
+        {
+          "url": "https://dantelabs.com/whole-genome-sequencing",
+          "read": "2026-11-23"
+        }
+      ]
+    },
+    {
+      "id": "dna-complete",
+      "name": "DNA Complete (Nebula Genomics)",
+      "kind": "consumer_wgs",
+      "hq": "US",
+      "countries_served": "Free shipping to US; others not verified",
+      "test_types": [
+        "1x / 30x / 100x whole genome"
+      ],
+      "doctor_order_required": false,
+      "prices": [
+        {
+          "test": "Essential 1x",
+          "amount": 245,
+          "currency": "USD",
+          "price_type": "sale price",
+          "source": {
+            "url": "https://dnacomplete.com/",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "Pro 30x",
+          "amount": 595,
+          "currency": "USD",
+          "price_type": "sale price",
+          "source": {
+            "url": "https://dnacomplete.com/",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "Elite 100x",
+          "amount": 1295,
+          "currency": "USD",
+          "price_type": "sale price",
+          "source": {
+            "url": "https://dnacomplete.com/",
+            "read": "2026-11-23"
+          }
+        }
+      ],
+      "raw_data": "CRAM and VCF downloadable",
+      "claims": "Wellness/ancestry reports; membership model. Do not present as a diagnostic test.",
+      "sources": [
+        {
+          "url": "https://dnacomplete.com/",
+          "read": "2026-11-23"
+        },
+        {
+          "url": "https://dnacomplete.com/terms-of-use",
+          "read": "2026-11-23",
+          "note": "Terms state not for diagnosis (per search summary; re-verify wording)"
+        }
+      ]
+    },
+    {
+      "id": "sequencing-com",
+      "name": "Sequencing.com",
+      "kind": "consumer_wgs",
+      "hq": "US",
+      "countries_served": "Worldwide (per site schema)",
+      "test_types": [
+        "30x whole genome (saliva)"
+      ],
+      "doctor_order_required": false,
+      "prices": [
+        {
+          "test": "Black Friday WGS kit tiers",
+          "amount": "329 / 449 / 699",
+          "currency": "USD",
+          "price_type": "limited-time sale (was 559 / 898 / 1748)",
+          "source": {
+            "url": "https://sequencing.com/",
+            "read": "2026-11-23"
+          }
+        },
+        {
+          "test": "Comprehensive Health Screen bundle (schema.org offer)",
+          "amount": 399,
+          "currency": "USD",
+          "price_type": "site structured data",
+          "source": {
+            "url": "https://sequencing.com/",
+            "read": "2026-11-23"
+          }
+        }
+      ],
+      "raw_data": "FASTQ, BAM, VCF downloadable",
+      "claims": "Consumer reports; Black Friday pricing on 23 Nov 2026 so prices are volatile",
+      "sources": [
+        {
+          "url": "https://sequencing.com/",
+          "read": "2026-11-23"
+        }
+      ]
+    },
+    {
+      "id": "23andme",
+      "name": "23andMe (and AncestryDNA, same class)",
+      "kind": "consumer_genotyping",
+      "hq": "US",
+      "doctor_order_required": false,
+      "why_not_diagnostic": "Genotyping chip reads preset positions only. 23andMe states its PGS test 'is not intended to diagnose any disease' and that reports may look at only a subset of variants, so a negative does not rule out a condition.",
+      "sources": [
+        {
+          "url": "https://support.23andme.org/hc/en-us/articles/42965747794199-How-Accurate-Is-23andMe",
+          "read": "2026-11-23"
+        },
+        {
+          "url": "https://dantelabs.com/whole-genome-sequencing",
+          "read": "2026-11-23",
+          "note": "Competitor states genotyping reads 600k-700k positions"
+        }
+      ]
+    }
+  ],
+  "sponsored_programmes": [
+    {
+      "id": "decode-duchenne",
+      "name": "Decode Duchenne (PPMD)",
+      "conditions": [
+        "Duchenne/Becker muscular dystrophy (DMD)"
+      ],
+      "genes": [
+        "DMD"
+      ],
+      "lab": "Revvity Omics",
+      "eligibility": "Confirmed or suspected Duchenne/Becker; citizens or legal residents of US or Canada. No application needed for diagnostic testing.",
+      "countries": [
+        "US",
+        "CA"
+      ],
+      "covers": "DMD deletions, duplications and point variants (NGS); reflex 133-gene neuromuscular panel if negative; CK testing; RNA sequencing on request (muscle biopsy); carrier testing for relatives (approval needed)",
+      "doctor_order_required": true,
+      "cost": "Free",
+      "sponsors": "Sarepta (founding), NS Pharma, ITF Therapeutics",
+      "source": {
+        "url": "https://www.parentprojectmd.org/about-duchenne/decode-duchenne/diagnostic-testing/",
+        "read": "2026-11-23"
+      }
+    },
+    {
+      "id": "invitae-detect-mdys",
+      "name": "Detect Muscular Dystrophy (Invitae/Labcorp)",
+      "conditions": [
+        "muscular dystrophies incl. DMD, LGMD"
+      ],
+      "lab": "Invitae",
+      "eligibility": "US; family history or suspected MD with elevated CK / presumptive positive DMD newborn screen, progressive weakness, dystrophic biopsy, calf hypertrophy, or cardiac/respiratory involvement. Not for carrier screening.",
+      "exclusions": "Does not test FSHD1, OPMD, myotonic dystrophy 1 and 2",
+      "countries": [
+        "US"
+      ],
+      "doctor_order_required": true,
+      "cost": "Free + free post-test counselling",
+      "source": {
+        "url": "https://www.invitae.com/us/sponsored-testing/detect-mdys",
+        "read": "2026-11-23"
+      }
+    },
+    {
+      "id": "behind-the-seizure",
+      "name": "Behind the Seizure (Invitae/Labcorp, BioMarin)",
+      "conditions": [
+        "childhood epilepsy"
+      ],
+      "lab": "Invitae",
+      "eligibility": "US; child under 10 with first unprovoked seizure between ages 2 and 5 inclusive. Others: Invitae Unlock Epilepsy.",
+      "countries": [
+        "US",
+        "CA (page footer: testing and counselling available in US and Canada)"
+      ],
+      "doctor_order_required": true,
+      "cost": "Free + free post-test counselling",
+      "privacy": "Sponsors receive de-identified (pseudonymised) data and clinician contact details",
+      "source": {
+        "url": "https://www.invitae.com/us/sponsored-testing/behind-the-seizure",
+        "read": "2026-11-23"
+      }
+    },
+    {
+      "id": "genedx-accelerating-answers",
+      "name": "GeneDx Accelerating Answers programmes",
+      "conditions": [
+        "alpha-mannosidosis",
+        "SHANK3 autism",
+        "cholestasis",
+        "early-onset cataracts",
+        "epilepsy",
+        "Fabry",
+        "Niemann-Pick C (genome)",
+        "PBD-ZSD"
+      ],
+      "lab": "GeneDx",
+      "countries": [
+        "US (assumed; verify per programme)"
+      ],
+      "doctor_order_required": true,
+      "cost": "No-cost or financially supported, per programme",
+      "source": {
+        "url": "https://www.genedx.com/providers/genetic-testing-programs",
+        "read": "2026-11-23"
+      }
+    },
+    {
+      "id": "preventiongenetics-sponsored",
+      "name": "PreventionGenetics sponsored programmes",
+      "conditions": [
+        "sensorineural hearing loss (Lilly Resonate; also Brazil, Mexico)",
+        "acute hepatic porphyria",
+        "hATTR",
+        "primary hyperoxaluria type 1",
+        "Friedreich ataxia (Biogen, 16+)",
+        "hypoparathyroidism (US, Canada)",
+        "inherited retinal disease (My Retina Tracker)",
+        "FCS",
+        "cholestasis",
+        "early-onset cataracts",
+        "PBD-ZSD",
+        "auditory neuropathy",
+        "rare genetic obesity (US, Canada)",
+        "TK2 deficiency",
+        "periodic paralysis"
+      ],
+      "lab": "PreventionGenetics",
+      "countries": [
+        "mostly US; some US+Canada; hearing loss also BR, MX"
+      ],
+      "doctor_order_required": true,
+      "cost": "No charge for eligible patients",
+      "source": {
+        "url": "https://www.preventiongenetics.com/sponsored-testing",
+        "read": "2026-11-23"
+      }
+    },
+    {
+      "id": "ambry-sponsored",
+      "name": "Ambry AmbryLink sponsored programmes",
+      "conditions": [
+        "FCS / severe hypertriglyceridaemia",
+        "HoFH",
+        "Danon disease (under 40)"
+      ],
+      "lab": "Ambry",
+      "countries": [
+        "US"
+      ],
+      "doctor_order_required": true,
+      "cost": "No cost for eligible patients",
+      "source": {
+        "url": "https://www.ambrygen.com/partners/sponsored-testing",
+        "read": "2026-11-23"
+      }
+    },
+    {
+      "id": "probably-genetic",
+      "name": "Probably Genetic free testing programmes",
+      "conditions": [
+        "specific conditions with limited slots (list changes)"
+      ],
+      "lab": "CLIA/CAP partner lab",
+      "eligibility": "Online assessment; if approved, at-home saliva/cheek kit; physician-ordered via its clinician network; counselling appointment for results",
+      "countries": [
+        "not stated clearly; verify"
+      ],
+      "doctor_order_required": "Ordered by its own clinician network (family does not need their own doctor)",
+      "cost": "Free for eligible; also insurance-billed route",
+      "source": {
+        "url": "https://www.probablygenetic.com/faq",
+        "read": "2026-11-23"
+      }
+    },
+    {
+      "id": "ptc-pinpoint-direct",
+      "name": "PTC Pinpoint Direct - CP Spectrum",
+      "conditions": [
+        "cerebral palsy symptoms without brain injury (e.g. AADC deficiency)"
+      ],
+      "lab": "Invitae; Genome Medical counselling",
+      "eligibility": "US, all ages; patient-initiated",
+      "countries": [
+        "US"
+      ],
+      "doctor_order_required": "Patient-initiated; ordered via Genome Medical",
+      "cost": "Free (as launched 14 Apr 2021; current status to verify)",
+      "source": {
+        "url": "https://ir.ptcbio.com/news-releases/news-release-details/ptc-therapeutics-launches-ptc-pinpoint-directtm-program-patient",
+        "read": "2026-11-23"
+      }
+    }
+  ],
+  "public_routes": [
+    {
+      "id": "nhs-england-gms",
+      "name": "NHS Genomic Medicine Service (England)",
+      "what": "Free NHS testing incl. rare disease WGS when a clinical indication in the National Genomic Test Directory is met; requested by eligible specialist clinicians",
+      "sources": [
+        {
+          "url": "https://www.england.nhs.uk/publication/national-genomic-test-directories/",
+          "read": "2026-11-23"
+        },
+        {
+          "url": "https://www.eastgenomics.nhs.uk/for-healthcare-professionals/genomic-tests/referral-forms-index/rare-disease-whole-genome-sequencing-wgs/",
+          "read": "2026-11-23"
+        }
+      ]
+    },
+    {
+      "id": "ireland-chi",
+      "name": "Ireland: Children's Health Ireland clinical genetics",
+      "what": "Public referral route; long waits reported by Rare Diseases Ireland",
+      "sources": [
+        {
+          "url": "https://rdi.ie/wp-content/uploads/2023/03/RDI-Ending-the-Wait.pdf",
+          "read": "2026-11-23",
+          "note": "Not opened directly; from search summary, verify figures before use"
+        },
+        {
+          "url": "https://link.springer.com/article/10.1007/s12687-023-00664-w",
+          "read": "2026-11-23",
+          "note": "Not opened directly"
+        }
+      ]
+    }
+  ]
+}
